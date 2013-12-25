@@ -7,8 +7,10 @@
 #include <memory>
 #include <string>
 
-#include <BLocker.h>
+#include <Locker.h>
 
+
+namespace engine {
 
 class TaskList;
 
@@ -17,25 +19,28 @@ class Task {
 		Task(TaskList& owner, std::string title = "", std::string notes = "");
 		Task(TaskList& owner, std::string title, std::string notes,
 			time_t dueDate);
+		~Task();
+			// Check desctructor after implementing SetNextSibling, etc!
 		
 		void						SetTitle(std::string title);
 		std::string					GetTitle() const;
 		void						SetNotes(std::string notes);
 		std::string					GetNotes() const;
 		void						SetDueDate(time_t date);
-		time						GetDueDate() const;
-		void						Complete(bool state, bool affectOthers
-										= false);
+		time_t						GetDueDate() const;
+		void						Complete(bool state,
+										bool affectChildren = true,
+										bool affectParent = true);
 		bool						IsCompleted() const;
 		void						Delete();
 		bool						IsDeleted() const;
 		std::string					GetId() const;
 		
-		void						SetParent(const Task* parent);
+		void						SetParent(Task* parent);
 										// nullptr means no parent (top tasks)
 		Task*						GetParent() const;
 		Task*						GetFirstChild() const;
-		void						SetPreviousSibling(const Task* sibling);
+		void						SetPreviousSibling(Task* sibling);
 										// nullptr means that this task is
 										// first in parent's child list
 		Task*						GetPreviousSibling() const;
@@ -45,12 +50,32 @@ class Task {
 		
 		
 	public:
-		static Task*				GetById(std::string Id);	
+		static Task*				GetById(std::string Id);
+			// Returns pointer instead reference, cause empty Id represents
+			// null pointer (nullptr).
 	
-	private:
-									Task();					
-										// creates copy object (other behavior)
-		std::unique_ptr<Task>		_CreateCopy() const;
+	private:	
+		// These functions create copy object (other behavior). Consider making
+		// these public - should object be non-copyable? It has unique id
+									Task(const Task& pattern);
+		Task&						operator=(const Task& pattern) = delete;
+		
+		// _ChangeId() is thread-safe
+		void						_ChangeId(std::string id);
+		// Two methods above are *NOT* thread-safe (it's desired)
+		void						_DeleteNode();
+		void						_InsertNode(Task* previousSibling,
+										Task* parent);
+		
+		// Some function for reporting changes!
+		
+		// Functions provided only for thread-safety
+		void						_SetVarNextSibling(Task* sibling,
+										bool targetSafeLock = true);
+		void						_SetVarPreviousSibling(Task* sibling,
+										bool targetSafeLock = true);
+		void						_SetVarFirstChild(Task* child,
+										bool targetSafeLock = true);
 		
 	private:
 		std::string					fTitle;
@@ -66,20 +91,26 @@ class Task {
 		std::string					fPreviousSiblingId;
 		TaskList&					fOwner;
 		
+		// Variables for synchronizer (not need thread safety)
 		time_t						fLastUpdate;
 			// if equals zero, then task is not created in online base,
 			// so after this creating, id will have new value
 		time_t						fLastLocalChange;
 		std::unique_ptr<Task>		fLastUpdateState;
 			// uses for diff update (better synchronization)
-		BLocker						fMutex;		
+		
+		mutable BLocker				fMutex;
+		const bool					fIsCopyObject;
 		
 	private:
-		static Task&				_Register(Task& task, std::string Id);
-		static Task&				_Unregister(std::string Id);
+		static void					_Register(Task& task);
+		static void					_Unregister(Task& task);
 		static std::map<std::string, Task*>
 									sExistingTasks;
+		static BLocker				sExistingTasksMutex;
 	
 };
+
+} // namespace engine
 
 #endif
