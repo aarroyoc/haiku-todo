@@ -1,0 +1,39 @@
+General TODO:
+- code TaskList class:
+  * create header file
+  * implement methods
+- code TaskListManager class:
+  * create header file
+  * implement methods
+- code PluginLoader class:
+  * create header file
+  * implement methods
+- code SynchronizationPlugin class:
+  * create header file
+  * implement methods
+- code TaskSynchronizer class:
+  * create header file
+  * implement methods
+- code TaskSerializer class:
+  * create header file
+  * implement methods
+- code Internet class (checks connection and actual time):
+  * create header file
+  * implement methods
+- code Task class:
+  * update fLastLocalChange variable
+  * request synchronization every time when something changes
+- code OAuth2 class:
+  * create header file
+  * implement methods
+- code plugin for Google Tasks:
+  * code TimeTfc3339 class
+  * inherit TaskSynchronizer class:
+    + create header file
+    + implement methods
+  * inherit TaskSerializer class (hm, use default serializer?):
+    + create header file
+    + implement methods
+  * inherit SynchronizationPlugin class:
+    + create header file
+    + implement methods
