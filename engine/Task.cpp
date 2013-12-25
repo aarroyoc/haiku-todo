@@ -1,5 +1,6 @@
 #include "Task.h"
 #include "TaskList.h"
+#include "TaskUtility.h"
 
 #include <cassert>
 #include <sstream>
@@ -60,18 +61,9 @@ Task::GetById(std::string Id)
 //
 //	Non-static members
 //	- constructors
-//  - destructor
+//	- destructor
 //
 //////////////////////////////////////////////////////////////////////////////
-
-std::string _GetNextId()
-{
-	static uint64 counter = 0;
-	counter++;
-	std::ostringstream str;
-	str << "!@#" << counter; // std::to_string not provided...
-	return str.str();
-}
 
 
 Task::Task(TaskList& owner, std::string title, std::string notes)
