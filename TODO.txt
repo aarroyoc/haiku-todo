@@ -1,6 +1,5 @@
 General TODO:
 - code TaskListManager class:
-  * create header file
   * implement methods
 - code PluginLoader class:
   * create header file
