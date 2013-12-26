@@ -20,7 +20,6 @@ class Task {
 		Task(TaskList& owner, std::string title, std::string notes,
 			time_t dueDate);
 		~Task();
-			// Check desctructor after implementing SetNextSibling, etc!
 		
 		void						SetTitle(std::string title);
 		std::string					GetTitle() const;
@@ -67,7 +66,7 @@ class Task {
 		void						_InsertNode(Task* previousSibling,
 										Task* parent);
 		
-		// Some function for reporting changes!
+		// Some function for reporting changes! (TODO)
 		
 		// Functions provided only for thread-safety
 		void						_SetVarNextSibling(Task* sibling,

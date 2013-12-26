@@ -1,9 +1,7 @@
-#include "Task.h"
 #include "TaskList.h"
 #include "TaskUtility.h"
 
 #include <cassert>
-#include <sstream>
 
 #include <Autolock.h>
 
@@ -53,7 +51,7 @@ Task::GetById(std::string Id)
 	BAutolock guard(sExistingTasksMutex);
 	assert(sExistingTasks.find(Id) != sExistingTasks.end());
 		// consider this assertion
-	return sExistingTasks.find(Id)->second;
+	return sExistingTasks[Id];
 }
 
 
@@ -404,7 +402,7 @@ Task::_InsertNode(Task* previousSibling, Task* parent)
 			fNextSiblingId = nextSibling ? nextSibling->GetId() : "";
 		}
 		else { // We are new root - so we have to find last one to replace it
-			if(!fOwner.GetTaskList().empty) {
+			if(!fOwner.GetTaskList().empty()) {
 				Task* root = &*fOwner.GetTaskList().front();
 				while(root->GetParent() != nullptr)
 					root = root->GetParent();
