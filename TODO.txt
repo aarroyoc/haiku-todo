@@ -1,8 +1,6 @@
 General TODO:
+- Refactorization: use BString instead std::string
 - code TaskListManager class:
-  * implement methods
-- code PluginLoader class:
-  * create header file
   * implement methods
 - code SynchronizationPlugin class:
   * create header file
