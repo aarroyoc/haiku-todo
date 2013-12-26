@@ -286,6 +286,11 @@ Task::Delete()
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);
 	fDeleted = true;
+	
+	// Delete all children recursively.
+	Task* child = GetById(fFirstChildId);
+	for ( ; child != nullptr; child = child->GetNextSibling())
+			child->Delete();
 }
 
 
