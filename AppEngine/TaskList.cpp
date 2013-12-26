@@ -210,7 +210,7 @@ TaskList::AddTask(Task* parent, std::string title, std::string notes,
 	time_t dueDate)
 {
 	BAutolock guard(fMutex);
-	Task* task = new Task(title, notes, dueDate);
+	Task* task = new Task(*this, title, notes, dueDate);
 	std::unique_ptr<Task> taskPtr(task);
 	fTaskList.push_back(std::move(taskPtr));
 	
