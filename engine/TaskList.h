@@ -33,7 +33,7 @@ class TaskList {
 		Task*						GetRootTask() const;
 		TaskListManager&			GetOwner() const;
 		Task*						AddTask(Task* parent,
-										std::string title = "",
+										std::string title = "Unnamed task",
 										std::string notes = "",
 										time_t dueDate = 0);
 		
