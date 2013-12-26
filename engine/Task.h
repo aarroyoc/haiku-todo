@@ -95,7 +95,7 @@ class Task {
 			// if equals zero, then task is not created in online base,
 			// so after this creating, id will have new value
 		time_t						fLastLocalChange;
-		std::unique_ptr<Task>		fLastUpdateState;
+		std::unique_ptr<Task>		fLastUpdateCopy;
 			// uses for diff update (better synchronization)
 		
 		mutable BLocker				fMutex;

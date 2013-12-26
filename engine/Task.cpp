@@ -85,7 +85,7 @@ Task::Task(TaskList& owner, std::string title, std::string notes,
 	fOwner(owner),
 	fLastUpdate(0),
 	fLastLocalChange(0),
-	fLastUpdateState(),
+	fLastUpdateCopy(),
 	fMutex(("Task mutex, id: " + fId).c_str()),
 	fIsCopyObject(false)
 {
@@ -119,7 +119,7 @@ Task::Task(const Task& pattern)
 	
 	fLastUpdate(0),
 	fLastLocalChange(0),
-	fLastUpdateState(),
+	fLastUpdateCopy(),
 	fMutex(("[COPY] Task mutex, id" + fId).c_str()),
 	fIsCopyObject(true)
 {
