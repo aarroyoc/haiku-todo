@@ -205,12 +205,12 @@ TaskList::ClearDeletedTasks()
 }
 
 
-template<typename ...T>
 Task*
-TaskList::AddTask(Task* parent, T... constructorArgs)
+TaskList::AddTask(Task* parent, std::string title, std::string notes,
+	time_t dueDate)
 {
 	BAutolock guard(fMutex);
-	Task* task = new Task(constructorArgs...);
+	Task* task = new Task(title, notes, dueDate);
 	std::unique_ptr<Task> taskPtr(task);
 	fTaskList.push_back(std::move(taskPtr));
 	

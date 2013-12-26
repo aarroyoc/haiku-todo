@@ -16,9 +16,8 @@ class TaskList;
 
 class Task {
 	public:
-		Task(TaskList& owner, std::string title = "", std::string notes = "");
-		Task(TaskList& owner, std::string title, std::string notes,
-			time_t dueDate);
+		Task(TaskList& owner, std::string title = "", std::string notes = "",
+			time_t dueDate = 0);
 		~Task();
 		
 		void						SetTitle(std::string title);

@@ -64,13 +64,6 @@ Task::GetById(std::string Id)
 //////////////////////////////////////////////////////////////////////////////
 
 
-Task::Task(TaskList& owner, std::string title, std::string notes)
-	:
-	Task(owner, title, notes, 0)
-{
-}
-
-
 Task::Task(TaskList& owner, std::string title, std::string notes,
 	time_t dueDate)
 	:

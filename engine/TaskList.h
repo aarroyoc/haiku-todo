@@ -32,9 +32,10 @@ class TaskList {
 		void						ClearDeletedTasks();
 		Task*						GetRootTask() const;
 		TaskListManager&			GetOwner() const;
-		template<typename ...T>
 		Task*						AddTask(Task* parent,
-										T... constructorArgs);
+										std::string title = "",
+										std::string notes = "",
+										time_t dueDate = 0);
 		
 		
 	public:
