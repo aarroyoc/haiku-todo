@@ -10,7 +10,7 @@
 #include <Locker.h>
 
 
-namespace engine {
+namespace AppEngine {
 
 class TaskList;
 
@@ -112,6 +112,6 @@ class Task {
 		friend class TaskList;
 };
 
-} // namespace engine
+} // namespace AppEngine
 
 #endif // TASK_H

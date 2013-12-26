@@ -7,7 +7,7 @@
 #include <list>
 
 
-namespace engine {
+namespace AppEngine {
 
 class TaskListManager;
 
@@ -68,6 +68,6 @@ class TaskList {
 
 };
 
-} // namespace engine
+} // namespace AppEngine
 
 #endif // TASKLIST_H

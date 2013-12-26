@@ -6,7 +6,7 @@
 #include <Autolock.h>
 
 
-namespace engine {
+namespace AppEngine {
 	
 
 //////////////////////////////////////////////////////////////////////////////
@@ -243,5 +243,5 @@ TaskList::_ChangeId(std::string id)
 	// Since no one stores our id, we have nothing to update		
 }
 
-} // namespace engine
+} // namespace AppEngine
 

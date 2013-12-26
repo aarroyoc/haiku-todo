@@ -5,7 +5,7 @@
 #include <SupportDefs.h>
 
 
-namespace engine {
+namespace AppEngine {
 
 template<typename T>
 std::string
@@ -25,4 +25,4 @@ _GetNextId()
 	return "!@#" + ToString(counter);
 }
 
-} // namespace engine
+} // namespace AppEngine

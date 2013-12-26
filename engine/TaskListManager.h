@@ -6,14 +6,14 @@
 #include "TaskList.h"
 
 
-namespace plugin {
+namespace PluginEngine {
 
 class TaskSynchronizer;
 class TaskSerializer;
 	
-}
+} // namespace PluginEngine
 
-namespace engine {
+namespace AppEngine {
 	
 class TaskListManager {	
 	public:
@@ -59,7 +59,7 @@ class TaskListManager {
 		PluginLoader				fPluginLoader;
 };
 
-} // namespace engine
+} // namespace AppEngine
 
 
 #endif //TASKLISTMANAGER_H

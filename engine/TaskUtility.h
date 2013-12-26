@@ -1,7 +1,7 @@
 #include <string>
 
 
-namespace engine {
+namespace AppEngine {
 
 template<typename T>
 std::string ToString(T arg);
@@ -10,4 +10,4 @@ std::string ToString(T arg);
 std::string _GetNextId();
 
 
-} // namespace engine
+} // namespace AppEngine

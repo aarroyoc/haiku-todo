@@ -6,7 +6,7 @@
 #include <Autolock.h>
 
 
-namespace engine {
+namespace AppEngine {
 	
 
 //////////////////////////////////////////////////////////////////////////////
@@ -446,4 +446,4 @@ Task::_SetVarFirstChild(Task* child, bool targetSafeLock)
 }
 
 	
-} // namespace engine
+} // namespace AppEngine
