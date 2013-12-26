@@ -403,13 +403,7 @@ Task::_InsertNode(Task* previousSibling, Task* parent)
 		}
 		else { // We are new root - so we have to find last one to replace it
 			if(!fOwner.GetTaskList().empty()) {
-				Task* root = &*fOwner.GetTaskList().front();
-				while(root->GetParent() != nullptr)
-					root = root->GetParent();
-				while(root->GetPreviousSibling() != nullptr)
-					root = root->GetPreviousSibling();
-				
-				nextSibling = root;
+				nextSibling = fOwner.GetRootTask();
 				fNextSiblingId = nextSibling->GetId();
 			}
 			else { // There's no root (empty TaskList)

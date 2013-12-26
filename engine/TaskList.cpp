@@ -1,4 +1,5 @@
 #include "TaskList.h"
+#include "TaskUtility.h"
 
 #include <cassert>
 
@@ -51,6 +52,195 @@ TaskList::GetById(std::string Id)
 	assert(sExistingLists.find(Id) != sExistingLists.end());
 		// consider this assertion
 	return sExistingLists[Id];
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Non-static members
+//	- constructors
+//	- destructor
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+TaskList::TaskList(TaskListManager& owner, std::string title)
+	:
+	fTitle(title),
+	fId(_GetNextId()),
+	fDeleted(false),
+	fTaskList(),
+	fLastUpdate(0),
+	fLastLocalChange(0),
+	fMutex(("[COPY] TaskList mutex, id" + fId).c_str()),
+	fOwner(owner)
+{
+	_Register(*this);	
+}
+
+
+TaskList::~TaskList()
+{
+	_Unregister(*this);	
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Non-static members
+//	- public getters
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+std::string
+TaskList::GetTitle() const
+{
+	BAutolock guard(fMutex);
+	return fTitle;
+}
+
+
+std::string
+TaskList::GetId() const
+{
+	BAutolock guard(fMutex);
+	return fId;
+}
+
+
+const TaskList::TaskContainer&
+TaskList::GetTaskList() const
+{
+	BAutolock guard(fMutex);
+	return fTaskList;
+}
+
+
+bool
+TaskList::IsDeleted() const
+{
+	BAutolock guard(fMutex);
+	return fDeleted;
+}
+
+
+Task*
+TaskList::GetRootTask() const
+{
+	BAutolock guard(fMutex);
+	if (fTaskList.empty())
+		return nullptr;
+		 
+	Task* root = &*fTaskList.front();
+	while(root->GetParent() != nullptr)
+		root = root->GetParent();
+	while(root->GetPreviousSibling() != nullptr)
+		root = root->GetPreviousSibling();
+	return root;
+}
+
+
+TaskListManager&
+TaskList::GetOwner() const
+{
+	BAutolock guard(fMutex);
+	return fOwner;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Non-static members
+//	- public setters
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+void
+TaskList::SetTitle(std::string title)
+{
+	BAutolock guard(fMutex);
+	fTitle = title;
+}
+
+
+void
+TaskList::Delete()
+{
+	BAutolock guard(fMutex);
+	fDeleted = true;
+}
+
+
+void
+TaskList::DeleteCompletedTasks()
+{
+	BAutolock guard(fMutex);
+	// range-based for uses assignment which is forbidden for std::unique_ptr
+	for(TaskContainer::iterator it = fTaskList.begin(); it != fTaskList.end();
+																		it++)
+		(*it)->Delete();	
+}
+
+
+void
+TaskList::ClearDeletedTasks()
+{
+	BAutolock guard(fMutex);
+	for(TaskContainer::iterator it = fTaskList.begin(); it != fTaskList.end();)
+	{
+		bool deletedRecently = false;
+		
+		BAutolock((*it)->fMutex);
+		if ((*it)->fDeleted == true &&
+			(*it)->fLastUpdate > (*it)->fLastLocalChange) {
+				// delete only when task is deleted on server!
+			it = fTaskList.erase(it);
+			deletedRecently = true;
+		}
+		
+		if (deletedRecently == false)
+			it++;
+	}
+}
+
+
+template<typename ...T>
+Task*
+TaskList::AddTask(Task* parent, T... constructorArgs)
+{
+	BAutolock guard(fMutex);
+	Task* task = new Task(constructorArgs...);
+	std::unique_ptr<Task> taskPtr(task);
+	fTaskList.push_back(std::move(taskPtr));
+	
+	task->SetParent(parent);
+	Task* lastSibling = task;
+	while (lastSibling->GetNextSibling() != nullptr)
+		lastSibling = lastSibling->GetNextSibling();
+	task->SetPreviousSibling(lastSibling);
+	return task;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Non-static members
+//	- private methods
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+void
+TaskList::_ChangeId(std::string id)
+{
+	BAutolock guard(fMutex);
+	
+	_Unregister(*this);
+	fId = id;
+	_Register(*this);
+	
+	// Since no one stores our id, we have nothing to update		
 }
 
 } // namespace engine

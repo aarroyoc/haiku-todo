@@ -17,6 +17,7 @@ class TaskList {
 		
 									TaskList(TaskListManager& owner,
 										std::string title = "");
+									~TaskList();
 								// Non-copyable
 									TaskList(const TaskList&) = delete;
 		TaskList& 					operator=(const TaskList&) = delete;
@@ -26,12 +27,14 @@ class TaskList {
 		std::string					GetId() const;
 		const TaskContainer &		GetTaskList() const;
 		void						Delete();
-		void						ClearCompleted();
-		void						ClearDeleted();
-		Task*						GetFirstTask();
-		TaskListManager&			GetOwner();
+		bool						IsDeleted() const;
+		void						DeleteCompletedTasks();
+		void						ClearDeletedTasks();
+		Task*						GetRootTask() const;
+		TaskListManager&			GetOwner() const;
 		template<typename ...T>
-		Task*						AddTask(T... constructorArgs);
+		Task*						AddTask(Task* parent,
+										T... constructorArgs);
 		
 		
 	public:
@@ -45,6 +48,7 @@ class TaskList {
 	private:
 		std::string					fTitle;
 		std::string					fId;
+		bool						fDeleted;
 		
 		TaskContainer				fTaskList;
 		
@@ -53,7 +57,6 @@ class TaskList {
 		
 		mutable BLocker				fMutex;
 		TaskListManager&			fOwner;
-		
 		
 	private:
 		static void					_Register(TaskList& list);

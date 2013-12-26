@@ -107,7 +107,10 @@ class Task {
 		static std::map<std::string, Task*>
 									sExistingTasks;
 		static BLocker				sExistingTasksMutex;
-	
+		
+		
+		
+		friend class TaskList;
 };
 
 } // namespace engine

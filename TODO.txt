@@ -1,7 +1,4 @@
 General TODO:
-- code TaskList class:
-  * create header file
-  * implement methods
 - code TaskListManager class:
   * create header file
   * implement methods
@@ -23,6 +20,8 @@ General TODO:
 - code Task class:
   * update fLastLocalChange variable
   * request synchronization every time when something changes
+- code TaskList class:
+  * implement synchronization
 - code OAuth2 class:
   * create header file
   * implement methods
