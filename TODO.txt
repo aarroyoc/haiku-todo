@@ -5,7 +5,6 @@ General TODO:
   * create header file
   * implement methods
 - code TaskSerializer class:
-  * create header file
   * implement methods
 - code Internet class (checks connection and actual time):
   * create header file
