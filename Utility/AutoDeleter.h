@@ -19,6 +19,8 @@ class AutoDeleter {
 									~AutoDeleter();
 									
 		void						Swap(AutoDeleter<T>& other);
+		void						Reset(T* object = nullptr,
+										Deleter deleter = DefaultDeleter);
 		T*							GetPointer() const;
 		
 		static void					DefaultDeleter(T* object);

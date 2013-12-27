@@ -51,3 +51,12 @@ AutoDeleter<T>::Swap(AutoDeleter<T>& other)
 	other.fObject = myObject;
 	other.fDeleter = myDeleter;
 }
+
+
+template<typename T>
+void
+AutoDeleter<T>::Reset(T* object, Deleter deleter)
+{
+	this->Swap(AutoDeleter<T>(object, deleter));
+		// Old object will be deleted (as temporary object)
+}
