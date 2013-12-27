@@ -1,6 +1,6 @@
 #include "PluginLoader.h"
 #include "SynchronizationPlugin.h"
-#include "TaskUtility.h"
+#include "Utility.h"
 
 #include <cassert>
 #include <dlfcn.h>
