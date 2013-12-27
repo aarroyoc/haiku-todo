@@ -2,6 +2,8 @@
 #define AUTODELETER_H
 
 
+#include <memory>
+
 /*!
  * Template dedicated for plugins and other out-of-application allocations.
  * When plugin allocate new object, it also must provide adequate deleter.
@@ -12,14 +14,20 @@ class AutoDeleter {
 	public:
 		typedef void (*Deleter)(T*);	
 		
-									AutoDeleter(T* object, Deleter deleter);
+									AutoDeleter(T* object = nullptr,
+										Deleter deleter = DefaultDeleter);
 									~AutoDeleter();
+									
+		void						Swap(AutoDeleter<T>& other);
+		T*							GetObject() const;
 		
-		T* const					fObject;
+		static void					DefaultDeleter(T* object);
+			// std::default_delete<T> not provided...
+		
 		
 	private:
-		const Deleter				fDeleter;
-			// Do not let delete object "by accident"
+		T*							fObject;
+		Deleter						fDeleter;
 };
 
 #endif // AUTODELETER_H
