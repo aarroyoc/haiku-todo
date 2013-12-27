@@ -69,6 +69,14 @@ PluginLoader::GetPlugin() const
 }
 
 
+BString
+PluginLoader::GetPluginFilename() const
+{
+	assert(IsPluginLoaded());
+	return fPluginFilename;	
+}
+
+
 //////////////////////////////////////////////////////////////////////////////
 //
 //	Public methods - setters

@@ -21,6 +21,7 @@ class PluginLoader {
 		void						Unload();
 		bool						IsPluginLoaded() const;
 		SynchronizationPlugin&		GetPlugin() const;
+		BString						GetPluginFilename() const;
 		
 		
 	private:
