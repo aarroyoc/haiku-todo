@@ -21,8 +21,8 @@ SynchronizationPlugin::SynchronizationPlugin(
 
 SynchronizationPlugin::SynchronizationPlugin()
 {
-	fSynchronizer.Swap(AutoDeleter<TaskSynchronizer>(new TaskSynchronizer));
-	fSerializer.Swap(AutoDeleter<TaskSerializer>(new TaskSerializer));
+	fSynchronizer.Reset(new TaskSynchronizer);
+	fSerializer.Swap(new TaskSerializer);
 }
 
 
