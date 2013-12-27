@@ -5,12 +5,20 @@
 #include <String.h>
 
 
+namespace AppEngine {
+
+class TaskListManager;
+	
+} // namespace AppEngine
+
+
 namespace PluginEngine {
 
 class TaskSerializer {
 	public:
-		virtual BString Serialize(const TaskListManager& tasks) const;
-		virtual void Parse(TaskListManager& tasks) const;
+		virtual BString Serialize(const AppEngine::TaskListManager& tasks)
+			const;
+		virtual void Parse(AppEngine::TaskListManager& tasks) const;
 };
 
 } // namespace PluginEngine
