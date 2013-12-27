@@ -18,7 +18,7 @@ class TaskSerializer {
 	public:
 		virtual BString Serialize(const AppEngine::TaskListManager& tasks)
 			const;
-		virtual void Parse(AppEngine::TaskListManager& tasks) const;
+		virtual bool Parse(AppEngine::TaskListManager& tasks) const;
 };
 
 } // namespace PluginEngine
