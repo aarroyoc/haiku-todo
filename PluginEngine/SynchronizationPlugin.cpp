@@ -1,4 +1,6 @@
 #include "SynchronizationPlugin.h"
+#include "TaskSerializer.h"
+#include "TaskSynchronizer.h"
 
 #include <cassert>
 
@@ -14,6 +16,13 @@ SynchronizationPlugin::SynchronizationPlugin(
 	
 	fSynchronizer.Swap(synchronizer);
 	fSerializer.Swap(serializer);
+}
+
+
+SynchronizationPlugin::SynchronizationPlugin()
+{
+	fSynchronizer.Swap(AutoDeleter<TaskSynchronizer>(new TaskSynchronizer));
+	fSerializer.Swap(AutoDeleter<TaskSerializer>(new TaskSerializer));
 }
 
 

@@ -19,6 +19,7 @@ class SynchronizationPlugin {
 								SynchronizationPlugin(
 									AutoDeleter<TaskSynchronizer>& synchronizer,
 									AutoDeleter<TaskSerializer>& serializer);
+								SynchronizationPlugin();
 								~SynchronizationPlugin();
 								
 	TaskSynchronizer&			GetSynchronizer() const;
