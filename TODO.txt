@@ -3,7 +3,7 @@ General TODO:
   * create header file
   * implement methods
 - code TaskSerializer class:
-  * implement methods
+  * implement parsing
 - code Internet class (checks connection and actual time):
   * create header file
   * implement methods
@@ -26,3 +26,5 @@ General TODO:
   * inherit SynchronizationPlugin class:
     + create header file
     + implement methods
+- consider how to give read and write access to TaskSerializer and
+  TaskSynchronizer derived classes (in plugin)

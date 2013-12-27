@@ -7,6 +7,13 @@
 #include <list>
 
 
+namespace PluginEngine {
+
+class TaskSynchronizer;
+class TaskSerializer;
+	
+} // namespace PluginEngine
+
 namespace AppEngine {
 
 class TaskListManager;
@@ -69,7 +76,7 @@ class TaskList {
 		
 		
 		friend class TaskListManager;
-
+		friend class PluginEngine::TaskSerializer;
 };
 
 } // namespace AppEngine

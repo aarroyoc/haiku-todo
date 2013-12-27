@@ -61,6 +61,10 @@ class TaskListManager {
 	private:
 		TaskListContainer			fTaskLists;
 		PluginEngine::PluginLoader	fPluginLoader;
+		
+		
+		
+		friend class PluginEngine::TaskSerializer;
 };
 
 } // namespace AppEngine

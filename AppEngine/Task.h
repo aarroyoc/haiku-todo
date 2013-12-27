@@ -10,6 +10,13 @@
 #include <String.h>
 
 
+namespace PluginEngine {
+
+class TaskSynchronizer;
+class TaskSerializer;
+	
+} // namespace PluginEngine
+
 namespace AppEngine {
 
 class TaskList;
@@ -112,6 +119,7 @@ class Task {
 		
 		
 		friend class TaskList;
+		friend class PluginEngine::TaskSerializer;
 };
 
 } // namespace AppEngine
