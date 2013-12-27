@@ -32,7 +32,7 @@ AutoDeleter<T>::~AutoDeleter()
 
 template<typename T>
 T*
-AutoDeleter<T>::GetObject() const
+AutoDeleter<T>::GetPointer() const
 {
 	return fObject;	
 }

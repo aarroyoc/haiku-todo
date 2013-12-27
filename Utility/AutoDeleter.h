@@ -19,7 +19,7 @@ class AutoDeleter {
 									~AutoDeleter();
 									
 		void						Swap(AutoDeleter<T>& other);
-		T*							GetObject() const;
+		T*							GetPointer() const;
 		
 		static void					DefaultDeleter(T* object);
 			// std::default_delete<T> not provided...
