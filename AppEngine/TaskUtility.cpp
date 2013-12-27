@@ -5,24 +5,29 @@
 #include <SupportDefs.h>
 
 
-namespace AppEngine {
-
 template<typename T>
-std::string
+BString
 ToString(T arg)
 {
 	std::ostringstream str;
 	str << arg;
-	return str.str();
+	return str.str().c_str();
 }
 
 
-std::string
-_GetNextId()
+BString
+GetNextId()
 {
 	static uint64 counter = 0;
 	counter++;
 	return "!@#" + ToString(counter);
 }
 
-} // namespace AppEngine
+
+BString
+operator+(const BString& a, const BString& b)
+{
+	BString ab(a);
+	ab += b;
+	return ab;	
+}

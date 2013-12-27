@@ -1,5 +1,4 @@
 General TODO:
-- Refactorization: use BString instead std::string
 - code TaskListManager class:
   * implement methods
 - code SynchronizationPlugin class:

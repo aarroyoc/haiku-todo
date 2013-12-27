@@ -15,7 +15,7 @@ namespace AppEngine {
 //
 //////////////////////////////////////////////////////////////////////////////
 
-std::map<std::string, Task*> Task::sExistingTasks;
+std::map<BString, Task*> Task::sExistingTasks;
 BLocker Task::sExistingTasksMutex("Task::sExistingTasks mutex");
 
 
@@ -40,7 +40,7 @@ Task::_Unregister(Task& task)
 
 
 Task*
-Task::GetById(std::string Id)
+Task::GetById(BString Id)
 {
 	static bool inited = false;
 	if(!inited) {
@@ -64,13 +64,12 @@ Task::GetById(std::string Id)
 //////////////////////////////////////////////////////////////////////////////
 
 
-Task::Task(TaskList& owner, std::string title, std::string notes,
-	time_t dueDate)
+Task::Task(TaskList& owner, BString title, BString notes, time_t dueDate)
 	:
 	fTitle(title),
 	fNotes(notes),
 	fDueDate(dueDate),
-	fId(_GetNextId()),
+	fId(GetNextId()),
 	fCompleted(false),
 	fDeleted(false),
 	// skipping parent, children and siblings,
@@ -79,7 +78,7 @@ Task::Task(TaskList& owner, std::string title, std::string notes,
 	fLastUpdate(0),
 	fLastLocalChange(0),
 	fLastUpdateCopy(),
-	fMutex(("Task mutex, id: " + fId).c_str()),
+	fMutex(("Task mutex, id: " + fId).String()),
 	fIsCopyObject(false)
 {
 	_Register(*this);
@@ -113,7 +112,7 @@ Task::Task(const Task& pattern)
 	fLastUpdate(0),
 	fLastLocalChange(0),
 	fLastUpdateCopy(),
-	fMutex(("[COPY] Task mutex, id" + fId).c_str()),
+	fMutex(("[COPY] Task mutex, id" + fId).String()),
 	fIsCopyObject(true)
 {
 }
@@ -127,7 +126,7 @@ Task::Task(const Task& pattern)
 //////////////////////////////////////////////////////////////////////////////
 
 
-std::string
+BString
 Task::GetTitle() const
 {
 	BAutolock guard(fMutex);
@@ -135,7 +134,7 @@ Task::GetTitle() const
 }
 
 
-std::string
+BString
 Task::GetNotes() const
 {
 	BAutolock guard(fMutex);
@@ -167,7 +166,7 @@ Task::IsDeleted() const
 }
 
 
-std::string
+BString
 Task::GetId() const
 {
 	BAutolock guard(fMutex);
@@ -223,7 +222,7 @@ Task::GetOwner() const
 
 
 void
-Task::SetTitle(std::string title)
+Task::SetTitle(BString title)
 {
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);
@@ -232,7 +231,7 @@ Task::SetTitle(std::string title)
 
 
 void
-Task::SetNotes(std::string notes)
+Task::SetNotes(BString notes)
 {
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);
@@ -315,7 +314,7 @@ Task::SetPreviousSibling(Task* sibling)
 
 // Reserved for synchronizer (when local id is replaced by this from server)
 void
-Task::_ChangeId(std::string id)
+Task::_ChangeId(BString id)
 {
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);

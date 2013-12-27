@@ -5,9 +5,9 @@
 #include <ctime>
 #include <map>
 #include <memory>
-#include <string>
 
 #include <Locker.h>
+#include <String.h>
 
 
 namespace AppEngine {
@@ -17,15 +17,15 @@ class TaskList;
 class Task {
 	public:
 									Task(TaskList& owner,
-										std::string title = "",
-										std::string notes = "",
+										BString title = "",
+										BString notes = "",
 										time_t dueDate = 0);
 									~Task();
 		
-		void						SetTitle(std::string title);
-		std::string					GetTitle() const;
-		void						SetNotes(std::string notes);
-		std::string					GetNotes() const;
+		void						SetTitle(BString title);
+		BString						GetTitle() const;
+		void						SetNotes(BString notes);
+		BString						GetNotes() const;
 		void						SetDueDate(time_t date);
 		time_t						GetDueDate() const;
 		void						Complete(bool state,
@@ -34,7 +34,7 @@ class Task {
 		bool						IsCompleted() const;
 		void						Delete();
 		bool						IsDeleted() const;
-		std::string					GetId() const;
+		BString						GetId() const;
 		
 		void						SetParent(Task* parent);
 										// nullptr means no parent (top tasks)
@@ -50,7 +50,7 @@ class Task {
 		
 		
 	public:
-		static Task*				GetById(std::string Id);
+		static Task*				GetById(BString Id);
 			// Returns pointer instead reference, cause empty Id represents
 			// null pointer (nullptr).
 	
@@ -61,7 +61,7 @@ class Task {
 		Task&						operator=(const Task& pattern) = delete;
 		
 		// _ChangeId() is thread-safe
-		void						_ChangeId(std::string id);
+		void						_ChangeId(BString id);
 		// Two methods above are *NOT* thread-safe (it's desired)
 		void						_DeleteNode();
 		void						_InsertNode(Task* previousSibling,
@@ -78,17 +78,17 @@ class Task {
 										bool targetSafeLock = true);
 		
 	private:
-		std::string					fTitle;
-		std::string					fNotes;
+		BString						fTitle;
+		BString						fNotes;
 		time_t						fDueDate;
-		std::string					fId;
+		BString						fId;
 		bool						fCompleted;
 		bool						fDeleted;
 		
-		std::string					fParentId;
-		std::string					fFirstChildId;
-		std::string					fNextSiblingId;
-		std::string					fPreviousSiblingId;
+		BString						fParentId;
+		BString						fFirstChildId;
+		BString						fNextSiblingId;
+		BString						fPreviousSiblingId;
 		TaskList&					fOwner;
 		
 		// Variables for synchronizer (not need thread safety)
@@ -105,7 +105,7 @@ class Task {
 	private:
 		static void					_Register(Task& task);
 		static void					_Unregister(Task& task);
-		static std::map<std::string, Task*>
+		static std::map<BString, Task*>
 									sExistingTasks;
 		static BLocker				sExistingTasksMutex;
 		

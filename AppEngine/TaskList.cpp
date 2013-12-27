@@ -15,7 +15,7 @@ namespace AppEngine {
 //
 //////////////////////////////////////////////////////////////////////////////
 
-std::map<std::string, TaskList*> TaskList::sExistingLists;
+std::map<BString, TaskList*> TaskList::sExistingLists;
 BLocker TaskList::sExistingListsMutex("Task::sExistingLists mutex");
 
 
@@ -40,7 +40,7 @@ TaskList::_Unregister(TaskList& list)
 
 
 TaskList*
-TaskList::GetById(std::string Id)
+TaskList::GetById(BString Id)
 {
 	static bool inited = false;
 	if(!inited) {
@@ -64,15 +64,15 @@ TaskList::GetById(std::string Id)
 //////////////////////////////////////////////////////////////////////////////
 
 
-TaskList::TaskList(TaskListManager& owner, std::string title)
+TaskList::TaskList(TaskListManager& owner, BString title)
 	:
 	fTitle(title),
-	fId(_GetNextId()),
+	fId(GetNextId()),
 	fDeleted(false),
 	fTaskList(),
 	fLastUpdate(0),
 	fLastLocalChange(0),
-	fMutex(("[COPY] TaskList mutex, id" + fId).c_str()),
+	fMutex(("[COPY] TaskList mutex, id" + fId).String()),
 	fOwner(owner)
 {
 	_Register(*this);	
@@ -93,7 +93,7 @@ TaskList::~TaskList()
 //////////////////////////////////////////////////////////////////////////////
 
 
-std::string
+BString
 TaskList::GetTitle() const
 {
 	BAutolock guard(fMutex);
@@ -101,7 +101,7 @@ TaskList::GetTitle() const
 }
 
 
-std::string
+BString
 TaskList::GetId() const
 {
 	BAutolock guard(fMutex);
@@ -157,7 +157,7 @@ TaskList::GetOwner() const
 
 
 void
-TaskList::SetTitle(std::string title)
+TaskList::SetTitle(BString title)
 {
 	BAutolock guard(fMutex);
 	fTitle = title;
@@ -206,7 +206,7 @@ TaskList::ClearDeletedTasks()
 
 
 Task*
-TaskList::AddTask(Task* parent, std::string title, std::string notes,
+TaskList::AddTask(Task* parent, BString title, BString notes,
 	time_t dueDate)
 {
 	BAutolock guard(fMutex);
@@ -232,7 +232,7 @@ TaskList::AddTask(Task* parent, std::string title, std::string notes,
 
 
 void
-TaskList::_ChangeId(std::string id)
+TaskList::_ChangeId(BString id)
 {
 	BAutolock guard(fMutex);
 	

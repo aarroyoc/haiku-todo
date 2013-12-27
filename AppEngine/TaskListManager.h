@@ -17,7 +17,7 @@ namespace AppEngine {
 	
 class TaskListManager {	
 	public:
-		typedef std::list<std::unique_ptr<TaskLists>> TaskListContainer;
+		typedef std::list<std::unique_ptr<TaskList>> TaskListContainer;
 		
 		enum class InitType {
 			PluginFilename,
@@ -34,29 +34,31 @@ class TaskListManager {
 		//   two online lists? If you want to support second list, simple
 		//   create new object.
 									TaskListManager(InitType type,
-										std::string data);
+										BString data);
 		
 		const TaskListContainer&	GetLists() const;
-		void						AddList(std::string title ="Unnamed list");
+		void						AddList(BString title = "Unnamed list");
 		
 		void						ClearDeletedLists();
 		
-		std::string					Serialize() const;
-		void						SaveToFile(std::string filename) const;
+		BString						Serialize() const;
+		void						SaveToFile(BString filename) const;
 			// File/Serialize format: first line contain plugin's filename,
 			// other data are serialized tasks.
 		
 	private:
-		void						_Parse(std::string content);
-		void						_ReadFromFile(std::string filename);
+		void						_Parse(BString content);
+		void						_ReadFromFile(BString filename);
 		
-		TaskSynchronizer&			_GetSynchronizer() const;
+		PluginEngine::TaskSynchronizer&
+									_GetSynchronizer() const;
 			// Should it be public? SynchronizeAll() outside system for a wish
-		TaskSerializer&				_GetSerializer() const;	
+		PluginEngine::TaskSerializer&
+									_GetSerializer() const;	
 		
 	private:
 		TaskListContainer			fTaskLists;
-		PluginLoader				fPluginLoader;
+		PluginEngine::PluginLoader	fPluginLoader;
 };
 
 } // namespace AppEngine

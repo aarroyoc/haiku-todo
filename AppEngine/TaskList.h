@@ -16,15 +16,15 @@ class TaskList {
 		typedef std::list<std::unique_ptr<Task>> TaskContainer;
 		
 									TaskList(TaskListManager& owner,
-										std::string title = "");
+										BString title = "");
 									~TaskList();
 								// Non-copyable
 									TaskList(const TaskList&) = delete;
 		TaskList& 					operator=(const TaskList&) = delete;
 		
-		void						SetTitle(std::string title);
-		std::string					GetTitle() const;
-		std::string					GetId() const;
+		void						SetTitle(BString title);
+		BString						GetTitle() const;
+		BString						GetId() const;
 		const TaskContainer &		GetTaskList() const;
 		void						Delete();
 		bool						IsDeleted() const;
@@ -33,22 +33,22 @@ class TaskList {
 		Task*						GetRootTask() const;
 		TaskListManager&			GetOwner() const;
 		Task*						AddTask(Task* parent,
-										std::string title = "Unnamed task",
-										std::string notes = "",
+										BString title = "Unnamed task",
+										BString notes = "",
 										time_t dueDate = 0);
 		
 		
 	public:
-		static TaskList*			GetById(std::string id);
+		static TaskList*			GetById(BString id);
 		
 		
 	private:
-		void						_ChangeId(std::string id);
+		void						_ChangeId(BString id);
 		
 		
 	private:
-		std::string					fTitle;
-		std::string					fId;
+		BString						fTitle;
+		BString						fId;
 		bool						fDeleted;
 		
 		TaskContainer				fTaskList;
@@ -62,7 +62,7 @@ class TaskList {
 	private:
 		static void					_Register(TaskList& list);
 		static void					_Unregister(TaskList& list);
-		static std::map<std::string, TaskList*>
+		static std::map<BString, TaskList*>
 									sExistingLists;
 		static BLocker				sExistingListsMutex;
 

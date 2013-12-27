@@ -1,5 +1,6 @@
 #include "PluginLoader.h"
 #include "SynchronizationPlugin.h"
+#include "TaskUtility.h"
 
 #include <cassert>
 #include <dlfcn.h>
@@ -9,10 +10,10 @@
 namespace PluginEngine {
 
 
-const char* const PluginLoader::PluginFactorySymbol
-									= "CreateSynchronizationPlugin";
-const char* const PluginLoader::PluginDestructorSymbol
-									= "DestroySynchronizationPlugin";
+const BString PluginLoader::PluginFactorySymbol
+								= "CreateSynchronizationPlugin";
+const BString PluginLoader::PluginDestructorSymbol
+								= "DestroySynchronizationPlugin";
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -22,7 +23,7 @@ const char* const PluginLoader::PluginDestructorSymbol
 //////////////////////////////////////////////////////////////////////////////
 
 
-PluginLoader::PluginLoader(std::string filename)
+PluginLoader::PluginLoader(BString filename)
 	:
 	fLibraryHandle(nullptr),
 	fPlugin(nullptr)
@@ -68,7 +69,7 @@ PluginLoader::GetPlugin() const
 
 
 void
-PluginLoader::Load(std::string filename)
+PluginLoader::Load(BString filename)
 {
 	assert(fPlugin == nullptr);
 	
@@ -78,16 +79,16 @@ PluginLoader::Load(std::string filename)
 		return;
 	}
 	
-	fLibraryHandle = dlopen(filename.c_str(), RTLD_LAZY);
+	fLibraryHandle = dlopen(filename.String(), RTLD_LAZY);
 	if (fLibraryHandle == nullptr) {
-		throw std::runtime_error("PluginLoader::Load() - Cannot load library "
-			"\"" + filename + "\" due to: " + dlerror());
+		throw std::runtime_error(("PluginLoader::Load() - Cannot load library "
+			"\"" + filename + "\" due to: " + dlerror()).String());
 	}
 	
 	try {
 		PluginFactoryPtr factory = reinterpret_cast<PluginFactoryPtr>(
-			_GetSymbol(PluginFactorySymbol));
-		_GetSymbol(PluginDestructorSymbol);
+			_GetSymbol(PluginFactorySymbol.String()));
+		_GetSymbol(PluginDestructorSymbol.String());
 			// Just ensure to get error here instead during unloading
 	
 		fPlugin = factory();
@@ -116,7 +117,7 @@ PluginLoader::Unload()
 	}
 	
 	PluginDestructorPtr destructor = reinterpret_cast<PluginDestructorPtr>(
-		_GetSymbol(PluginDestructorSymbol));
+		_GetSymbol(PluginDestructorSymbol.String()));
 	destructor(fPlugin);
 	dlclose(fLibraryHandle);
 	fLibraryHandle = fPlugin = nullptr;
@@ -132,23 +133,23 @@ PluginLoader::Unload()
 
 
 void*
-PluginLoader::_GetSymbol(std::string symbol) const
+PluginLoader::_GetSymbol(BString symbol) const
 {
 	assert(fLibraryHandle != nullptr);
 	
 	while (dlerror());
 		// Clear any existing error
 	
-	void* exportedSymbol = dlsym(fLibraryHandle, symbol.c_str());
+	void* exportedSymbol = dlsym(fLibraryHandle, symbol.String());
 	
 	if (exportedSymbol == nullptr) {		
-		std::string message = "PluginLoader::_GetSymbol() - Symbol \"" + symbol
+		BString message = "PluginLoader::_GetSymbol() - Symbol \"" + symbol
 			+ "\"not found in library \"" + fPluginFilename + "\"";
 		const char* error = dlerror();
 		if (error != nullptr)
-			message += std::string(" due to: ") + error;
+			message += BString(" due to: ") + error;
 		
-		throw std::runtime_error(message);
+		throw std::runtime_error(message.String());
 	}
 	
 	while (dlerror());

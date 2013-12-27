@@ -2,7 +2,7 @@
 #define PLUGINLOADER_H
 
 
-#include <string>
+#include <String.h>
 
 
 namespace PluginEngine {
@@ -12,17 +12,17 @@ class SynchronizationPlugin;
 class PluginLoader {
 	public:
 									PluginLoader(); // = default;
-									PluginLoader(std::string filename);
+									PluginLoader(BString filename);
 									~PluginLoader();
 	
-		void						Load(std::string filename);
+		void						Load(BString filename);
 		void						Unload();
 		bool						IsPluginLoaded() const;
 		SynchronizationPlugin&		GetPlugin() const;
 		
 		
 	private:
-		void*						_GetSymbol(std::string symbol) const;
+		void*						_GetSymbol(BString symbol) const;
 										// Helper function for Load() and
 										// Unload(). CAUTION! If symbol is not
 										// found exception will be thrown.
@@ -31,14 +31,14 @@ class PluginLoader {
 	private:
 		void*						fLibraryHandle;
 		SynchronizationPlugin*		fPlugin;
-		std::string					fPluginFilename;
+		BString						fPluginFilename;
 			// variable for std::runtime_error in _GetSymbol
 		
 		
 	private:
-		static const char* const	PluginFactorySymbol;
+		static const BString		PluginFactorySymbol;
 									//	= "CreateSynchronizationPlugin";
-		static const char* const	PluginDestructorSymbol;
+		static const BString		PluginDestructorSymbol;
 									//	= "DestroySynchronizationPlugin";
 	
 		typedef SynchronizationPlugin* (*PluginFactoryPtr)();

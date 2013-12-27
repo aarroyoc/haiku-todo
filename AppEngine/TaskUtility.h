@@ -1,13 +1,9 @@
-#include <string>
+#include <String.h>
 
-
-namespace AppEngine {
 
 template<typename T>
-std::string ToString(T arg);
+BString ToString(T arg);
 
+BString GetNextId();
 
-std::string _GetNextId();
-
-
-} // namespace AppEngine
+BString operator+(const BString& a, const BString& b);
