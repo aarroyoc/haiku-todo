@@ -14,6 +14,10 @@ class AutoDeleter {
 	public:
 		typedef void (*Deleter)(T*);	
 		
+		// Non-copyable
+									AutoDeleter(const AutoDeleter&) = delete;
+		AutoDeleter&				operator=(const AutoDeleter&) = delete;
+									
 									AutoDeleter(T* object = nullptr,
 										Deleter deleter = DefaultDeleter);
 									~AutoDeleter();
@@ -25,6 +29,9 @@ class AutoDeleter {
 		
 		static void					DefaultDeleter(T* object);
 			// std::default_delete<T> not provided...
+		
+		
+	private:
 		
 		
 	private:
