@@ -65,6 +65,10 @@ class TaskList {
 		static std::map<BString, TaskList*>
 									sExistingLists;
 		static BLocker				sExistingListsMutex;
+		
+		
+		
+		friend class TaskListManager;
 
 };
 

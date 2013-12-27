@@ -37,18 +37,20 @@ class TaskListManager {
 										BString data);
 		
 		const TaskListContainer&	GetLists() const;
-		void						AddList(BString title = "Unnamed list");
+		TaskList*					AddList(BString title = "Unnamed list");
 		
 		void						ClearDeletedLists();
 		
 		BString						Serialize() const;
-		void						SaveToFile(BString filename) const;
+		bool						SaveToFile(BString filename) const;
 			// File/Serialize format: first line contain plugin's filename,
 			// other data are serialized tasks.
 		
 	private:
-		void						_Parse(BString content);
-		void						_ReadFromFile(BString filename);
+		// On fail TaskListManager will be at default state
+		// (default plugin with no tasks)
+		bool						_Parse(BString serializedData);
+		bool						_ReadFromFile(BString filename);
 		
 		PluginEngine::TaskSynchronizer&
 									_GetSynchronizer() const;

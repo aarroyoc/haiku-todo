@@ -194,7 +194,7 @@ TaskList::ClearDeletedTasks()
 		BAutolock((*it)->fMutex);
 		if ((*it)->fDeleted == true &&
 			 ( (*it)->fLastUpdate >= (*it)->fLastLocalChange ||
-			 (*it)->LastUpdate == 0) ) {
+			 (*it)->fLastUpdate == 0) ) {
 				// delete only when task is deleted on server or doesn't exists
 			it = fTaskList.erase(it);
 			deletedRecently = true;

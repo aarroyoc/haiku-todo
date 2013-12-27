@@ -1,6 +1,4 @@
 General TODO:
-- code TaskListManager class:
-  * implement methods
 - code TaskSynchronizer class:
   * create header file
   * implement methods
