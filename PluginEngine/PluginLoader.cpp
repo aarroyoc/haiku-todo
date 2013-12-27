@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <dlfcn.h>
+#include <iostream> // For error reporting
 #include <stdexcept>
 
 
@@ -84,21 +85,24 @@ PluginLoader::GetPluginFilename() const
 //////////////////////////////////////////////////////////////////////////////
 
 
-void
+bool
 PluginLoader::Load(BString filename)
 {
 	assert(fPlugin.GetPointer() == nullptr);
 	
 	if (filename == "") {
 		// Get default plugin (no synchronization)
-		fPlugin = new SynchronizationPlugin();
-		return;
+		fPlugin.Reset(new SynchronizationPlugin());
+		return true;
 	}
 	
 	fLibraryHandle = dlopen(filename.String(), RTLD_LAZY);
 	if (fLibraryHandle == nullptr) {
-		throw std::runtime_error(("PluginLoader::Load() - Cannot load library "
-			"\"" + filename + "\" due to: " + dlerror()).String());
+		BString message = ("PluginLoader::Load() - Cannot load library "
+			"\"" + filename + "\" due to: " + dlerror());
+		//throw std::runtime_error(message.String());
+		std::cerr << message.String() << std::endl;
+		return false;
 	}
 	
 	try {
@@ -107,14 +111,17 @@ PluginLoader::Load(BString filename)
 		
 		factory(fPlugin);
 	}
-	catch (std::runtime_error) {
+	catch (const std::runtime_error& error) {
 		dlclose(fLibraryHandle);
 		fLibraryHandle = nullptr;
 		
-		throw;	
+		//throw
+		std::cerr << error.what() << std::endl;
+		return false;
 	}
 	
 	fPluginFilename = filename;
+	return true;
 }
 
 

@@ -17,7 +17,7 @@ class PluginLoader {
 									PluginLoader(BString filename);
 									~PluginLoader();
 	
-		void						Load(BString filename);
+		bool						Load(BString filename);
 		void						Unload();
 		bool						IsPluginLoaded() const;
 		SynchronizationPlugin&		GetPlugin() const;
