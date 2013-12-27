@@ -12,8 +12,6 @@ namespace PluginEngine {
 
 const BString PluginLoader::PluginFactorySymbol
 								= "CreateSynchronizationPlugin";
-const BString PluginLoader::PluginDestructorSymbol
-								= "DestroySynchronizationPlugin";
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -23,10 +21,20 @@ const BString PluginLoader::PluginDestructorSymbol
 //////////////////////////////////////////////////////////////////////////////
 
 
+PluginLoader::PluginLoader()
+	:
+	fLibraryHandle(nullptr),
+	fPlugin(),
+	fPluginFilename()
+{
+}
+
+
 PluginLoader::PluginLoader(BString filename)
 	:
 	fLibraryHandle(nullptr),
-	fPlugin(nullptr)
+	fPlugin(),
+	fPluginFilename()
 {
 	Load(filename);
 }
@@ -49,7 +57,7 @@ PluginLoader::~PluginLoader()
 bool
 PluginLoader::IsPluginLoaded() const
 {
-	return fPlugin != nullptr;	
+	return fPlugin.GetPointer() != nullptr;	
 }
 
 
@@ -57,7 +65,7 @@ SynchronizationPlugin&
 PluginLoader::GetPlugin() const
 {
 	assert(IsPluginLoaded());
-	return *fPlugin;	
+	return *fPlugin.GetPointer();	
 }
 
 
@@ -71,7 +79,7 @@ PluginLoader::GetPlugin() const
 void
 PluginLoader::Load(BString filename)
 {
-	assert(fPlugin == nullptr);
+	assert(fPlugin.GetPointer() == nullptr);
 	
 	if (filename == "") {
 		// Get default plugin (no synchronization)
@@ -88,10 +96,8 @@ PluginLoader::Load(BString filename)
 	try {
 		PluginFactoryPtr factory = reinterpret_cast<PluginFactoryPtr>(
 			_GetSymbol(PluginFactorySymbol.String()));
-		_GetSymbol(PluginDestructorSymbol.String());
-			// Just ensure to get error here instead during unloading
-	
-		fPlugin = factory();
+		
+		factory(fPlugin);
 	}
 	catch (std::runtime_error) {
 		dlclose(fLibraryHandle);
@@ -107,21 +113,16 @@ PluginLoader::Load(BString filename)
 void
 PluginLoader::Unload()
 {
-	assert(fPlugin != nullptr);
+	assert(fPlugin.GetPointer() != nullptr);
 	
-	if (fLibraryHandle == nullptr) {
-		// using default plugin (no synchronization)
-		delete fPlugin;
-		fPlugin = nullptr;
-		return;	
-	}
-	
-	PluginDestructorPtr destructor = reinterpret_cast<PluginDestructorPtr>(
-		_GetSymbol(PluginDestructorSymbol.String()));
-	destructor(fPlugin);
-	dlclose(fLibraryHandle);
-	fLibraryHandle = fPlugin = nullptr;
+	fPlugin.Reset(nullptr);
 	fPluginFilename = "";
+	
+	if (fLibraryHandle != nullptr) {
+		// Free library if it is loaded (all cases excluding default plugin)
+		dlclose(fLibraryHandle);
+		fLibraryHandle = nullptr;
+	}
 }
 
 

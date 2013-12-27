@@ -2,6 +2,8 @@
 #define PLUGINLOADER_H
 
 
+#include "AutoDeleter.h"
+
 #include <String.h>
 
 
@@ -30,7 +32,8 @@ class PluginLoader {
 		
 	private:
 		void*						fLibraryHandle;
-		SynchronizationPlugin*		fPlugin;
+		AutoDeleter<SynchronizationPlugin>
+									fPlugin;
 		BString						fPluginFilename;
 			// variable for std::runtime_error in _GetSymbol
 		
@@ -38,11 +41,8 @@ class PluginLoader {
 	private:
 		static const BString		PluginFactorySymbol;
 									//	= "CreateSynchronizationPlugin";
-		static const BString		PluginDestructorSymbol;
-									//	= "DestroySynchronizationPlugin";
 	
-		typedef SynchronizationPlugin* (*PluginFactoryPtr)();
-		typedef void (*PluginDestructorPtr)(SynchronizationPlugin*);
+		typedef void (*PluginFactoryPtr)(AutoDeleter<SynchronizationPlugin>&);
 };
 
 } // namespace PluginEngine
