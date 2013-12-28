@@ -1,18 +1,23 @@
 General TODO:
-- code TaskSynchronizer class:
-  * create header file
-  * implement methods
+
 - code Internet class (checks connection and actual time):
   * create header file
   * implement methods
+  
 - code Task class:
   * update fLastLocalChange variable
   * request synchronization every time when something changes
+  
 - code TaskList class:
   * implement synchronization
+  
 - code OAuth2 class:
   * create header file
   * implement methods
+
+- code TaskSynchronizer class:
+  * implement callbacks (information about update - failed or done)
+  
 - code plugin for Google Tasks:
   * code TimeTfc3339 class
   * inherit TaskSynchronizer class:
@@ -26,5 +31,10 @@ General TODO:
     + implement methods
 - consider how to give read and write access to TaskSerializer and
   TaskSynchronizer derived classes (in plugin)
-- refactorization: leave standard serialization in AppEngine and
-  let plugins serialize only user data
+  
+- Refactorization:
+  * leave standard serialization in AppEngine and let plugins serialize
+    only user data (extract adequate code to AppEngine and PluginEngine)
+  * make Task* classes code cleaner (frienship declarations) and extract
+    task synchronization to adequate AppEngine class, plugins should
+    communicate via this class (get directly needed data)
