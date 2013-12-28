@@ -182,7 +182,7 @@ TaskListManager::_Parse(BString serializedData)
 		return false;
 	}
 	
-	if (_GetSerializer().Parse(*this) == false) {
+	if (_GetSerializer().Parse(*this, serializedTasks) == false) {
 		fPluginLoader.Unload();
 		fPluginLoader.Load("");
 		fTaskLists.clear();

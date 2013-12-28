@@ -39,7 +39,7 @@ class TaskList {
 		void						ClearDeletedTasks();
 		Task*						GetRootTask() const;
 		TaskListManager&			GetOwner() const;
-		Task*						AddTask(Task* parent,
+		Task*						AddTask(Task* parent = nullptr,
 										BString title = "Unnamed task",
 										BString notes = "",
 										time_t dueDate = 0);

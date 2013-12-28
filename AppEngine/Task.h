@@ -98,6 +98,9 @@ class Task {
 		BString						fPreviousSiblingId;
 		TaskList&					fOwner;
 		
+		void*						fUserData;
+			// Dedicated plugins for better synchronization
+		
 		// Variables for synchronizer (not need thread safety)
 		time_t						fLastUpdate;
 			// if equals zero, then task is not created in online base,

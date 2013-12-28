@@ -2,8 +2,6 @@ General TODO:
 - code TaskSynchronizer class:
   * create header file
   * implement methods
-- code TaskSerializer class:
-  * implement parsing
 - code Internet class (checks connection and actual time):
   * create header file
   * implement methods
@@ -28,3 +26,5 @@ General TODO:
     + implement methods
 - consider how to give read and write access to TaskSerializer and
   TaskSynchronizer derived classes (in plugin)
+- refactorization: leave standard serialization in AppEngine and
+  let plugins serialize only user data

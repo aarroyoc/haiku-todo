@@ -75,6 +75,7 @@ Task::Task(TaskList& owner, BString title, BString notes, time_t dueDate)
 	// skipping parent, children and siblings,
 	// default constructor is quite fine
 	fOwner(owner),
+	fUserData(nullptr),
 	fLastUpdate(0),
 	fLastLocalChange(0),
 	fLastUpdateCopy(),
@@ -109,6 +110,7 @@ Task::Task(const Task& pattern)
 	fPreviousSiblingId(pattern.fPreviousSiblingId),
 	fOwner(pattern.fOwner),
 	
+	fUserData(nullptr), // Object should be copied - we don't know how to do it
 	fLastUpdate(0),
 	fLastLocalChange(0),
 	fLastUpdateCopy(),
