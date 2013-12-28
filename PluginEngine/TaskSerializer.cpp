@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 
+#include <Autolock.h>
+
 
 namespace PluginEngine {
 
@@ -70,6 +72,7 @@ TaskSerializer::Parse(AppEngine::TaskListManager& manager, const BString& data)
 json::Object
 TaskSerializer::_SerializeList(const AppEngine::TaskList& list) const
 {
+	BAutolock guard(list.fMutex);
 	json::Array tasksJson;
 	
 	for(AppEngine::TaskList::TaskContainer::const_iterator it =
@@ -94,6 +97,7 @@ TaskSerializer::_SerializeList(const AppEngine::TaskList& list) const
 json::Object
 TaskSerializer::_SerializeTask(const AppEngine::Task& task) const
 {
+	BAutolock guard(task.fMutex);
 	json::Object taskJson;
 	
 	taskJson["title"] =				task.fTitle.String();
