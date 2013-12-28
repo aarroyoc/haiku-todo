@@ -110,6 +110,6 @@ namespace json
 	std::string Serialize(const Object& obj);
 
 	// This WILL mangle the input string. Converts a JSON formatted string to an Object.
-	// Will assert on error.
+	// Will throw std::runtime_error on error.
 	Object 		Deserialize(std::string& str);
 }

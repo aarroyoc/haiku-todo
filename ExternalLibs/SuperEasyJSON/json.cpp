@@ -24,6 +24,17 @@ std::string to_string(T arg)
 }
 } // namespace std
 
+#include <stdexcept>
+#include <iostream>
+#undef assert
+#define assert(CONDITION) \
+	if ((CONDITION)) { \
+		std::string message = std::string("Assertion in file ") + __FILE__ \
+			+ " at line " + std::to_string(__LINE__) + ": " + #CONDITION; \
+		std::cerr << message << std::endl; \
+		throw std::runtime_error(message); \
+	}
+
 
 // ------- End of addition by Artur Jamro
 ///////////////////////////////////////////////////////////////////////////
