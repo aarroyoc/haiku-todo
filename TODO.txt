@@ -1,8 +1,8 @@
 General TODO:
 
 - code Internet class (checks connection and actual time):
-  * create header file
-  * implement methods
+  * implement getting UTC time
+  * find out why CURLOPT_WRITEFUNCTION doesn't mute output to stdout
   
 - code Task class:
   * update fLastLocalChange variable
