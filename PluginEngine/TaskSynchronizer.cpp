@@ -22,7 +22,7 @@ namespace PluginEngine {
 TaskSynchronizer::TaskSynchronizer(AppEngine::TaskListManager& manager,
 	bool synchronizationEnabled, int32 synchronizationTimestampSeconds)
 	:
-	fManager(manager),
+	fManager(nullptr),
 	fSynchronizationEnabled(synchronizationEnabled),
 	fSynchronizationTimestamp(synchronizationTimestampSeconds),
 	fSynchronizationStopwatch("TaskSynchronization Stopwatch", true)
@@ -55,7 +55,7 @@ bool
 TaskSynchronizer::IsSynchronizationEnabled() const
 {
 	BAutolock guard(fDataMutex);
-	return fSynchronizationEnabled;
+	return fSynchronizationEnabled && fManager != nullptr;
 }
 
 
@@ -64,6 +64,14 @@ TaskSynchronizer::GetSynchronizationTimestamp() const
 {
 	BAutolock guard(fDataMutex);
 	return fSynchronizationTimestamp;
+}
+
+
+AppEngine::TaskListManager*
+TaskSynchronizer::GetSynchronizationTarget() const
+{
+	BAutolock guard(fDataMutex);
+	return fManager;
 }
 
 
@@ -87,6 +95,14 @@ TaskSynchronizer::SetSynchronizationTimestamp(int32 seconds)
 {
 	BAutolock guard(fDataMutex);
 	fSynchronizationTimestamp = seconds;
+}
+
+
+void		
+TaskSynchronizer::SetSynchronizationTarget(AppEngine::TaskListManager* manager)
+{
+	BAutolock guard(fDataMutex);
+	fManager = manager;
 }
 
 

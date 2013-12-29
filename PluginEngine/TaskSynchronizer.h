@@ -1,5 +1,5 @@
-#ifndef TASKSERIALIZER_H
-#define TASKSERIALIZER_H
+#ifndef TASKSYNCHRONIZER_H
+#define TASKSYNCHRONIZER_H
 
 
 #include <list>
@@ -23,7 +23,6 @@ namespace PluginEngine {
 class TaskSynchronizer {
 	public:
 							TaskSynchronizer(
-								AppEngine::TaskListManager& manager,
 								bool synchronizationEnabled = true,
 								int32 synchronizationTimestampSeconds = 60);
 		virtual				~TaskSynchronizer();
@@ -36,6 +35,10 @@ class TaskSynchronizer {
 		bool				IsSynchronizationEnabled() const;
 		void				SetSynchronizationTimestamp(int32 seconds);
 		int32				GetSynchronizationTimestamp() const;
+		void				SetSynchronizationTarget(
+								AppEngine::TaskListManager* manager);
+		AppEngine::TaskListManager*
+							GetSynchronizationTarget();
 		
 		void				SynchronizeAll();
 		void				SynchronizeList(AppEngine::TaskList& list);
@@ -71,7 +74,7 @@ class TaskSynchronizer {
 		
 		
 	protected:
-		AppEngine::TaskListManager&
+		AppEngine::TaskListManager*
 							fManager;
 	
 	
@@ -95,4 +98,4 @@ class TaskSynchronizer {
 
 } // namespace PluginEngine
 
-#endif // TASKSERIALIZER_H
+#endif // TASKSYNCHRONIZER_H
