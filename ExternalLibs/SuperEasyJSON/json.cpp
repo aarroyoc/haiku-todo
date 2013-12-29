@@ -28,12 +28,30 @@ std::string to_string(T arg)
 #include <iostream>
 #undef assert
 #define assert(CONDITION) \
-	if ((CONDITION)) { \
+	if (!(CONDITION)) { \
 		std::string message = std::string("Assertion in file ") + __FILE__ \
 			+ " at line " + std::to_string(__LINE__) + ": " + #CONDITION; \
 		std::cerr << message << std::endl; \
 		throw std::runtime_error(message); \
 	}
+
+void _deleteRedundantWhiteCharacters(std::string& str)
+{
+	std::string wc = " \t\n"; // white characters (basic)
+	bool inQuotes = false;
+	
+	assert(str[0] != '\"');
+	
+	for(size_t i=0; i<str.size(); i++) {
+		if (str[i] == '\"' && str[i-1] != '\\')
+			inQuotes = !inQuotes;
+		
+		if (!inQuotes && wc.find(str[i]) != std::string::npos) {
+			str.erase(i, 1);
+			i--;
+		}	
+	}
+}
 
 
 // ------- End of addition by Artur Jamro
@@ -269,8 +287,13 @@ Value DeserializeValue(std::string& str)
 	{
 		int depth = 1;
 		size_t i = 1;
+		bool inQuotes = false; // mod by Artur Jamro
 		for (; i < str.length(); i++)
 		{
+			if (str[i] == '\"' && str[i-1] != '\\') //----------
+				inQuotes = !inQuotes; // mod by Artur Jamro
+			if (inQuotes) //
+				continue; //--------------
 			if (str[i] == '[')
 				++depth;
 			else if ((str[i] == ']') && (--depth == 0))
@@ -289,8 +312,13 @@ Value DeserializeValue(std::string& str)
 	{
 		int depth = 1;
 		size_t i = 1;
+		bool inQuotes = false; // mod by Artur Jamro
 		for (; i < str.length(); i++)
 		{
+			if (str[i] == '\"' && str[i-1] != '\\') //----------
+				inQuotes = !inQuotes; // mod by Artur Jamro
+			if (inQuotes) //
+				continue; //--------------
 			if (str[i] == '{')
 				++depth;
 			else if ((str[i] == '}') && (--depth == 0))
@@ -308,6 +336,7 @@ Value DeserializeValue(std::string& str)
 	else if (str[0] == '\"')
 	{
 		size_t end_quote = str.find('\"', 1);
+		while (str[end_quote-1] == '\\') end_quote = str.find('\"', end_quote + 1); // Mod by Artur Jamro
 		assert(end_quote != std::string::npos);
 		if (end_quote == -1)
 			return v;
@@ -403,6 +432,7 @@ Array DeserializeArray(std::string& str)
 Object json::Deserialize(std::string& str)
 {
 	Object obj;
+	_deleteRedundantWhiteCharacters(str); // Mod by Artur Jamro
 
 	assert((str[0] == '{') && (str[str.length() - 1] == '}'));
 	if ((str[0] == '{') && (str[str.length() - 1] == '}'))
@@ -415,6 +445,7 @@ Object json::Deserialize(std::string& str)
 		// Get the key name
 		size_t start_quote_idx = str.find('\"');
 		size_t end_quote_idx = str.find('\"', start_quote_idx + 1);
+		while (str[end_quote_idx-1] == '\\') end_quote_idx = str.find('\"', end_quote_idx + 1); // Mod by Artur Jamro
 		size_t colon_idx = str.find(':', end_quote_idx);
 
 		assert((start_quote_idx != std::string::npos) && (end_quote_idx != std::string::npos) && (colon_idx != std::string::npos));
