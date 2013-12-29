@@ -5,41 +5,55 @@
 #include <String.h>
 
 /*!  ------ HOW TO USE
- * After creating an object assign fAuthorizeUrl, fTokenUrl, fClientId,
+ * After creating an object assign fAuthorizationUrl, fTokenUrl, fClientId,
  * fClientSecret and fScope. Then call CallInternetBrowserForCode().
  * User should got key and give us - assign it to fAuthorizeCode. 
- * Now you can call GetAccessToken(). RefreshAccessToken() will be called
- * internally by GetAccessToken(), if it is needed.
+ * Now you can call GetAccessToken().
  */
 
 class OAuth2 {
 	public:
 									OAuth2();
 	
-		BString						GetAccessToken();
-		bool						RefreshAccessToken();
+		BString						GetUrlForAuthorization() const;
 		bool						CallInternetBrowserForCode() const;
+		BString						GetAccessToken();
 	
 	
 	public:
 		// Setter + getter = public variable
-		BString						fAuthorizeUrl;
+		BString						fAuthorizationUrl;
 		BString						fTokenUrl;
 		
-		BString						fAuthroizeCode;
+		BString						fAuthorizationCode;
 		BString						fClientId;
 		BString						fClientSecret;
 		BString						fScope;
 		
+		const BString				kTokenType;
+		
+	
+	public:
+		bool						_RefreshAccessToken();
+		size_t						_CurlWriteFunction(void* ptr, size_t size,
+										size_t nmemb, void* userData);
 		
 	private:
 		BString						fAccessToken;
 		BString						fRefreshToken;
-		
 		time_t						fExpirationTime;
 		
-		const BString				fRedirectUri;
-		const BString				fTokenType;
+		BString						fWriteFunctionBuffer;
+		
+		const BString				kRedirectUri;
+		
+		
+		// Wrapper for receiving data is needed, because lambda expressions
+		// causes crashes :( 
+		static OAuth2*				sThis;
+		static size_t				_WriteFunctionWrapper(void* ptr,
+										size_t size, size_t nmemb,
+										void* userData);
 		
 };
 

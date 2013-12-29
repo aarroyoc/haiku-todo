@@ -12,8 +12,7 @@ General TODO:
   * implement synchronization
   
 - code OAuth2 class:
-  * create header file
-  * implement methods
+  * Refactorization?: making request move to new method
 
 - code TaskSynchronizer class:
   * implement callbacks (information about update - failed or done)
@@ -38,3 +37,4 @@ General TODO:
   * make Task* classes code cleaner (frienship declarations) and extract
     task synchronization to adequate AppEngine class, plugins should
     communicate via this class (get directly needed data)
+  * checkout OAuth2 class (in TODO
