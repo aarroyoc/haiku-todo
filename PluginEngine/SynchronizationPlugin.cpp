@@ -29,7 +29,7 @@ SynchronizationPlugin::SynchronizationPlugin(
 SynchronizationPlugin::SynchronizationPlugin()
 {
 	fSynchronizer.Reset(new TaskSynchronizer);
-	fSerializer.Swap(new TaskSerializer);
+	fSerializer.Reset(new TaskSerializer);
 }
 
 
