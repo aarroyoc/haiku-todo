@@ -62,6 +62,7 @@ Internet::GetUtcTime()
 			return -3;
 	}
 	
+	curl_easy_cleanup(curl);
 	return time;
 }
 
