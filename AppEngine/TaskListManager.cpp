@@ -1,6 +1,7 @@
 #include "SynchronizationPlugin.h"
 #include "TaskListManager.h"
 #include "TaskSerializer.h"
+#include "TaskSynchronizer.h"
 
 #include <cassert>
 
@@ -181,6 +182,7 @@ TaskListManager::_Parse(BString serializedData)
 		fPluginLoader.Load("");
 		return false;
 	}
+	_GetSynchronizer().SetSynchronizationTarget(this);
 	
 	if (_GetSerializer().Parse(*this, serializedTasks) == false) {
 		fPluginLoader.Unload();
