@@ -1,13 +1,13 @@
 #include "OAuth2.h"
 #include "Utility.h"
 
-#include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 
 #include <curl/curl.h>
-
 #include "json.h"
+
+#include <app/Roster.h>
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -78,10 +78,13 @@ OAuth2::CallInternetBrowserForCode() const
 	if (url == "")
 		return false;
 	
-	int errorCode = system("WebPositive \"" + url + "\" >/dev/null 2>&1");
-		// find better way... BRoaster?
+	BRoster roster;
+	int argc = 1;
+	char* argv[] = { const_cast<char*>(url.String()) };
+	if (roster.Launch("text/html", argc, argv) != B_OK)
+		return false;
 	
-	return errorCode == 0;
+	return true;
 }
 
 

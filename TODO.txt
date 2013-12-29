@@ -18,7 +18,7 @@ General TODO:
   * implement callbacks (information about update - failed or done)
   
 - code plugin for Google Tasks:
-  * code TimeTfc3339 class
+  * code TimeRfc3339 class
   * inherit TaskSynchronizer class:
     + create header file
     + implement methods
