@@ -39,8 +39,6 @@ class TaskSerializer {
 								json::Object& listJson) const;
 		bool				_ParseTask(AppEngine::Task& task,
 								json::Object& taskJson) const;
-		bool				_CheckKeys(json::Object& object,
-								const std::vector<std::string>& keys) const;
 };
 
 } // namespace PluginEngine

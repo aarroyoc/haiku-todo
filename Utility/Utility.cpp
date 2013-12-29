@@ -31,3 +31,14 @@ operator+(const BString& a, const BString& b)
 	ab += b;
 	return ab;	
 }
+
+
+bool
+CheckJsonKeys(json::Object& object,
+	const std::vector<std::string>& keys) const
+{
+	for (auto& key : keys)
+		if (object[key].GetType() == json::NULLVal)
+			return false;
+	return true;
+}

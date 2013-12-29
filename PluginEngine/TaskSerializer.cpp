@@ -1,5 +1,6 @@
 #include "TaskListManager.h"
 #include "TaskSerializer.h"
+#include "Utility.h"
 
 #include <stdexcept>
 
@@ -141,7 +142,7 @@ TaskSerializer::_ParseList(AppEngine::TaskList& list,
 {
 	std::vector<std::string> keys = {"title", "id", "deleted", "last_update",
 		"last_local_change", "task_list"};
-	if (_CheckKeys(listJson, keys) == false)
+	if (CheckJsonKeys(listJson, keys) == false)
 		return false;
 	
 	list.fTitle =			static_cast<std::string>(listJson["title"]).c_str();
@@ -169,12 +170,12 @@ TaskSerializer::_ParseTask(AppEngine::Task& task, json::Object& taskJson)
 	std::vector<std::string> keys = {"is_copy_object", "title", "notes",
 		"due_date", "id", "completed", "deleted", "parent", "first_child",
 		"next_sibling", "previous_sibling"};
-	if (_CheckKeys(taskJson, keys) == false)
+	if (CheckJsonKeys(taskJson, keys) == false)
 		return false;
 	
 	if (static_cast<bool>(taskJson["is_copy_object"]) == false) {
 		std::vector<std::string> keys = {"last_update", "last_local_change"};
-		if (_CheckKeys(taskJson, keys) == false)
+		if (CheckJsonKeys(taskJson, keys) == false)
 			return false;
 		
 		task.fLastUpdate =		static_cast<int>(taskJson["last_update"]);
@@ -200,24 +201,6 @@ TaskSerializer::_ParseTask(AppEngine::Task& task, json::Object& taskJson)
 	task.fPreviousSiblingId =static_cast<std::string>(taskJson["previous_sibling"]).c_str();
 	
 	return true;	
-}
-
-
-//////////////////////////////////////////////////////////////////////////////
-//
-//	Other methods
-//
-//////////////////////////////////////////////////////////////////////////////
-
-
-bool
-TaskSerializer::_CheckKeys(json::Object& object,
-	const std::vector<std::string>& keys) const
-{
-	for (auto& key : keys)
-		if (object[key].GetType() == json::NULLVal)
-			return false;
-	return true;
 }
 
 
