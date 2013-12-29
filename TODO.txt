@@ -1,7 +1,7 @@
 General TODO:
 
 - code Internet class (checks connection and actual time):
-  * implement getting UTC time
+  * implement getting UTC time - get http header and parse "Date: " parameter
   * find out why CURLOPT_WRITEFUNCTION doesn't mute output to stdout
   
 - code Task class:
