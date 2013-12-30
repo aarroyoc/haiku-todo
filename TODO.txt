@@ -11,7 +11,6 @@ General TODO:
   * implement callbacks (information about update - failed or done)
   
 - code plugin for Google Tasks:
-  * code TimeRfc3339 class
   * inherit TaskSynchronizer class:
     + create header file
     + implement methods
@@ -30,4 +29,5 @@ General TODO:
   * make Task* classes code cleaner (frienship declarations) and extract
     task synchronization to adequate AppEngine class, plugins should
     communicate via this class (get directly needed data)
-  * checkout OAuth2 class (in TODO
+  * checkout OAuth2 class (in TODO)
+  * make cache for time as RFC3339 timestamp and extract converting methods
