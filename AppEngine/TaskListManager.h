@@ -52,11 +52,14 @@ class TaskListManager {
 		bool						_Parse(BString serializedData);
 		bool						_ReadFromFile(BString filename);
 		
+		void						_OnUpdate(Task& task) const;
+		void						_OnUpdate(TaskList& list) const;
+		
 		PluginEngine::TaskSynchronizer&
 									_GetSynchronizer() const;
 			// Should it be public? SynchronizeAll() outside system for a wish
 		PluginEngine::TaskSerializer&
-									_GetSerializer() const;	
+									_GetSerializer() const;
 		
 	private:
 		TaskListContainer			fTaskLists;
@@ -64,6 +67,8 @@ class TaskListManager {
 		
 		
 		
+		friend class Task;
+		friend class TaskList;
 		friend class PluginEngine::TaskSerializer;
 };
 

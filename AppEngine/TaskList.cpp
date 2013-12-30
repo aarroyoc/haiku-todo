@@ -1,4 +1,5 @@
-#include "TaskList.h"
+#include "Internet.h"
+#include "TaskListManager.h"
 #include "Utility.h"
 
 #include <cassert>
@@ -161,6 +162,7 @@ TaskList::SetTitle(BString title)
 {
 	BAutolock guard(fMutex);
 	fTitle = title;
+	_OnUpdate();
 }
 
 
@@ -169,6 +171,7 @@ TaskList::Delete()
 {
 	BAutolock guard(fMutex);
 	fDeleted = true;
+	_OnUpdate();
 }
 
 
@@ -242,6 +245,14 @@ TaskList::_ChangeId(BString id)
 	_Register(*this);
 	
 	// Since no one stores our id, we have nothing to update		
+}
+
+
+void
+TaskList::_OnUpdate()
+{
+	fLastLocalChange = Internet::GetCachedUtcTime();
+	fOwner._OnUpdate(*this);
 }
 
 } // namespace AppEngine

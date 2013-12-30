@@ -73,6 +73,8 @@ class Task {
 		void						_DeleteNode();
 		void						_InsertNode(Task* previousSibling,
 										Task* parent);
+		// Is called on every update
+		void						_OnUpdate();
 		
 		// Some function for reporting changes! (TODO)
 		

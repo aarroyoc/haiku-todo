@@ -4,13 +4,6 @@ General TODO:
   * implement getting UTC time - get http header and parse "Date: " parameter
   * find out why CURLOPT_WRITEFUNCTION doesn't mute output to stdout
   
-- code Task class:
-  * update fLastLocalChange variable
-  * request synchronization every time when something changes
-  
-- code TaskList class:
-  * implement synchronization
-  
 - code OAuth2 class:
   * Refactorization?: making request move to new method
 

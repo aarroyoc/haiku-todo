@@ -51,6 +51,7 @@ class TaskList {
 		
 	private:
 		void						_ChangeId(BString id);
+		void						_OnUpdate();
 		
 		
 	private:

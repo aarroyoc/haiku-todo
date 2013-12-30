@@ -1,4 +1,5 @@
-#include "TaskList.h"
+#include "Internet.h"
+#include "TaskListManager.h"
 #include "Utility.h"
 
 #include <cassert>
@@ -228,7 +229,8 @@ Task::SetTitle(BString title)
 {
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);
-	fTitle = title;	
+	fTitle = title;
+	_OnUpdate();
 }
 
 
@@ -237,7 +239,8 @@ Task::SetNotes(BString notes)
 {
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);
-	fNotes = notes;	
+	fNotes = notes;
+	_OnUpdate();
 }
 
 
@@ -246,7 +249,8 @@ Task::SetDueDate(time_t dueDate)
 {
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);
-	fDueDate = dueDate;	
+	fDueDate = dueDate;
+	_OnUpdate();
 }
 
 
@@ -269,6 +273,8 @@ Task::Complete(bool state, bool affectChildren, bool affectParent)
 		if (parent)
 			parent->Complete(false, false, false);
 	}
+	
+	_OnUpdate();
 }
 
 
@@ -283,6 +289,8 @@ Task::Delete()
 	Task* child = GetById(fFirstChildId);
 	for ( ; child != nullptr; child = child->GetNextSibling())
 			child->Delete();
+	
+	_OnUpdate();
 }
 
 
@@ -292,7 +300,9 @@ Task::SetParent(Task* parent)
 	assert(fIsCopyObject == false);
 	BAutolock guard(fMutex);
 	_DeleteNode();
-	_InsertNode(nullptr, parent);	
+	_InsertNode(nullptr, parent);
+	
+	_OnUpdate();	
 }
 
 
@@ -303,6 +313,8 @@ Task::SetPreviousSibling(Task* sibling)
 	BAutolock guard(fMutex);
 	_DeleteNode();
 	_InsertNode(sibling, sibling ? sibling->GetParent() : GetById(fParentId));
+	
+	_OnUpdate();
 }
 
 
@@ -408,6 +420,14 @@ Task::_InsertNode(Task* previousSibling, Task* parent)
 	
 	if (nextSibling)
 		nextSibling->_SetVarPreviousSibling(this, false);
+}
+
+
+void
+Task::_OnUpdate()
+{
+	fLastLocalChange = Internet::GetCachedUtcTime();
+	fOwner.GetOwner()._OnUpdate(*this);
 }
 
 
