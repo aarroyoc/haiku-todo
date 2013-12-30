@@ -7,15 +7,15 @@
 
 namespace Plugin {
 
-class GTasksTaskSynchronizer
+class GTasksSynchronizer
 	:
 	public PluginEngine::TaskSynchronizer
 {
 	public:
-							GTasksTaskSynchronizer::GTasksTaskSynchronizer(
+							GTasksSynchronizer(
 								bool synchronizationEnabled = true,
 								int32 synchronizationTimestampSeconds = 60);
-		virtual				~GTasksTaskSynchronizer();
+		virtual				~GTasksSynchronizer();
 	
 	
 	protected:

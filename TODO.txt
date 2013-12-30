@@ -12,13 +12,6 @@ General TODO:
   
 - code plugin for Google Tasks:
   * inherit TaskSynchronizer class:
-    + create header file
-    + implement methods
-  * inherit TaskSerializer class (hm, use default serializer?):
-    + create header file
-    + implement methods
-  * inherit SynchronizationPlugin class:
-    + create header file
     + implement methods
 - consider how to give read and write access to TaskSerializer and
   TaskSynchronizer derived classes (in plugin)

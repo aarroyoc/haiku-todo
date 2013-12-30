@@ -1,4 +1,4 @@
-#include "GTasksTaskSynchronizer.h"
+#include "GTasksSynchronizer.h"
 
 
 namespace Plugin {
@@ -10,9 +10,9 @@ namespace Plugin {
 //////////////////////////////////////////////////////////////////////////////
 
 
-GTasksTaskSynchronizer::GTasksTaskSynchronizer(
-	bool synchronizationEnabled = true,
-	int32 synchronizationTimestampSeconds = 60)
+GTasksSynchronizer::GTasksSynchronizer(
+	bool synchronizationEnabled,
+	int32 synchronizationTimestampSeconds)
 	:
 	TaskSynchronizer(synchronizationEnabled, synchronizationTimestampSeconds)
 {
@@ -27,21 +27,21 @@ GTasksTaskSynchronizer::GTasksTaskSynchronizer(
 
 
 bool
-GTasksTaskSynchronizer::_OnSynchronizeAll()
+GTasksSynchronizer::_OnSynchronizeAll()
 {
 	return false;
 }
 
 
 bool
-GTasksTaskSynchronizer::_OnSynchronizeList(AppEngine::TaskList& list)
+GTasksSynchronizer::_OnSynchronizeList(AppEngine::TaskList& list)
 {
 	return false;
 }
 
 
 bool
-GTasksTaskSynchronizer::_OnSynchronizeTask(AppEngine::Task& task)
+GTasksSynchronizer::_OnSynchronizeTask(AppEngine::Task& task)
 {
 	return false;
 }
