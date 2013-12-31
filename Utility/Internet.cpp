@@ -107,8 +107,12 @@ Internet::SendHttpRequest(HttpMethod method, BString url,
 	std::vector<BString> headers, BString data)
 {	
 	CURL* curl = curl_easy_init();
-	if (curl == nullptr)
-		return "";
+	if (curl == nullptr) {
+		std::string message =
+			"Internet::SendHttpRequest() :: cannot init curl";
+		std::cerr << message << std::endl;
+		throw std::runtime_error(message);
+	}
 	
 	// Create response buffer and set curl write function
 	BString responseBuffer;
@@ -147,16 +151,21 @@ Internet::SendHttpRequest(HttpMethod method, BString url,
 	
 	CURLcode res;
 	res = curl_easy_perform(curl);
-	if (res != CURLE_OK) {
-		std::cerr << "Internet::SendHttpRequest :: curl error: "
-			<< curl_easy_strerror(res) << std::endl;	
-	}
 	
 	// Always cleanup!
 	curl_slist_free_all(curlHeaders);
 	curl_easy_cleanup(curl);
 	
-	return res == CURLE_OK ? responseBuffer : "";
+	// Check whether request succeeded
+	if (res != CURLE_OK) {
+		std::string message = 
+			std::string("Internet::SendHttpRequest() :: curl error: ")
+			+ curl_easy_strerror(res); 
+		std::cerr << message << std::endl;
+		throw std::runtime_error(message);	
+	}
+	
+	return responseBuffer;
 }
 
 
