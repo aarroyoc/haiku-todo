@@ -10,18 +10,25 @@ General TODO:
 
 - code TaskSynchronizer class:
   * implement callbacks (information about update - failed or done)
-  
-- code plugin for Google Tasks:
-  * inherit TaskSynchronizer class:
-    + implement methods
-- consider how to give read and write access to TaskSerializer and
-  TaskSynchronizer derived classes (in plugin)
-  
+
+- class TaskListManager:
+  * getting TaskSynchronizer should be public or should exist method which
+    forwards extra data to synchronizer (simply wrapper). Why? Please read
+    additional info in TaskSynchronizer.h file above ProvideExtraData() method
+    - Refactorization: check other cloud services and consider whether
+      TaskSynchronizer could have methods like IsAuthorizationNeeded(),
+      Authorize(BString code), etc instead ProvideExtraData(void*) 
+
+- write Makefile or something similar; application should be linked with AppEngine,
+  PluginEngine and Utility modules. Plugins should be linked with the same modules
+  plus its own Utilities. Don't forget about linking ExternalLibs module and libcurl.
+
 - Refactorization:
   * leave standard serialization in AppEngine and let plugins serialize
     only user data (extract adequate code to AppEngine and PluginEngine)
   * make Task* classes code cleaner (frienship declarations) and extract
     task synchronization to adequate AppEngine class, plugins should
     communicate via this class (get directly needed data)
-  * checkout OAuth2 class (in TODO)
+  * checkout OAuth2 class (in TODO.txt)
   * make cache for time as RFC3339 timestamp and extract converting methods
+  * Google Tasks plugin: extract repeating code to new methods; check FIXME and TODO

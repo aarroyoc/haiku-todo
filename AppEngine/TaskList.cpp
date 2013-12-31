@@ -56,6 +56,14 @@ TaskList::GetById(BString Id)
 }
 
 
+bool
+TaskList::CheckId(BString id)
+{
+	BAutolock guard(sExistingListsMutex);
+	return sExistingLists.find(id) != sExistingLists.end();
+}
+
+
 //////////////////////////////////////////////////////////////////////////////
 //
 //	Non-static members
@@ -73,7 +81,7 @@ TaskList::TaskList(TaskListManager& owner, BString title)
 	fTaskList(),
 	fLastUpdate(0),
 	fLastLocalChange(0),
-	fMutex(("[COPY] TaskList mutex, id" + fId).String()),
+	fMutex(("TaskList mutex, id" + fId).String()),
 	fOwner(owner)
 {
 	_Register(*this);	

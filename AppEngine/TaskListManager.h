@@ -6,6 +6,15 @@
 #include "TaskList.h"
 
 
+// I know it's bad code. Check TODO.txt for more information.
+#ifdef PLUGIN_CLASS_NAME
+namespace Plugin {
+
+class PLUGIN_CLASS_NAME;
+
+} // namespace Plugin
+#endif // PLUGIN_CLASS_NAME
+
 namespace PluginEngine {
 
 class TaskSynchronizer;
@@ -70,6 +79,11 @@ class TaskListManager {
 		friend class Task;
 		friend class TaskList;
 		friend class PluginEngine::TaskSerializer;
+		
+// I know it's bad code. Check TODO.txt for more information.
+#ifdef PLUGIN_CLASS_NAME
+		friend class Plugin::PLUGIN_CLASS_NAME;
+#endif // PLUGIN_CLASS_NAME
 };
 
 } // namespace AppEngine

@@ -46,6 +46,17 @@ class TaskSynchronizer {
 		
 		// Add: callbacks with result (failed, updated: changed or not)
 		
+		
+		/// Should be called after running constructor. When this method return
+		/// true, it  means that object is properly initialized. When it return
+		/// true once, you probably shouldn't call this method anymore (depends
+		/// on plugin specification).
+		/// ADDIDIONAL INFO: This method was specially provided due to OAuth2
+		///    in Google Tasks plugin. There were two ways - listen on given
+		///    port and get auth code (no all have forwarded ports) or user'll
+		///    get it and should paste it in application.
+		virtual bool		ProvideExtraData(void* extraData);
+		
 	
 	private:
 		static int32		_SynchronizationWorker(void* synchronizer);

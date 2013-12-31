@@ -56,6 +56,14 @@ Task::GetById(BString Id)
 }
 
 
+bool
+Task::CheckId(BString id)
+{
+	BAutolock guard(sExistingTasksMutex);
+	return sExistingTasks.find(id) != sExistingTasks.end();
+}
+
+
 //////////////////////////////////////////////////////////////////////////////
 //
 //	Non-static members
