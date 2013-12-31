@@ -6,6 +6,7 @@ General TODO:
   
 - code OAuth2 class:
   * Refactorization?: making request move to new method
+  * Refactorization: use Internet class for making requests
 
 - code TaskSynchronizer class:
   * implement callbacks (information about update - failed or done)

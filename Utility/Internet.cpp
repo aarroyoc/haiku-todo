@@ -5,6 +5,13 @@
 #include <iostream>
 
 
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Checking connection and getting time
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
 bool
 Internet::CheckConnection()
 {
@@ -85,4 +92,102 @@ Internet::GetCachedUtcTime()
 	}
 	
 	return utcSystemTime + sDeltaTime;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//	Sending HTTP requests
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
+BString
+Internet::SendHttpRequest(HttpMethod method, BString url,
+	std::vector<BString> headers, BString data)
+{	
+	CURL* curl = curl_easy_init();
+	if (curl == nullptr)
+		return "";
+	
+	// Create response buffer and set curl write function
+	BString responseBuffer;
+	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, _CurlWriteFunction);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &responseBuffer);
+	
+	// Prepare HTTP headers
+	curl_slist* curlHeaders = nullptr;
+	for (auto it : headers)
+		curlHeaders = curl_slist_append(curlHeaders, it.String());
+	if (curlHeaders != nullptr)
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, curlHeaders);
+	
+	switch (method) {
+		case HttpMethod::GET:
+			url += '?' + data;
+			break;
+			
+		case HttpMethod::POST:
+			curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.String());
+			break;
+			
+		case HttpMethod::PUT:
+			curl_easy_setopt(curl, CURLOPT_READFUNCTION, _CurlPutReadFunction);
+			curl_easy_setopt(curl, CURLOPT_READDATA, &data);
+			break;
+			
+		case HttpMethod::DELETE:
+			// just do nothing -- DELETE does *NOT* send data 
+			break;
+	}
+	
+	// Here, because GET appends data to URL!
+	curl_easy_setopt(curl, CURLOPT_URL, url.String());
+	
+	
+	CURLcode res;
+	res = curl_easy_perform(curl);
+	if (res != CURLE_OK) {
+		std::cerr << "Internet::SendHttpRequest :: curl error: "
+			<< curl_easy_strerror(res) << std::endl;	
+	}
+	
+	// Always cleanup!
+	curl_slist_free_all(curlHeaders);
+	curl_easy_cleanup(curl);
+	
+	return res == CURLE_OK ? responseBuffer : "";
+}
+
+
+size_t
+Internet::_CurlWriteFunction(void* ptr, size_t size, size_t nmemb,
+	void* userData)
+{
+	BString* requestResponse = reinterpret_cast<BString*>(userData);
+	
+	int32 oldSize = requestResponse->Length();
+	int32 bufferSize = oldSize + size*nmemb;
+	char* buffer = requestResponse->LockBuffer(bufferSize);
+	
+	memcpy(buffer + oldSize, ptr, size*nmemb);
+	requestResponse->UnlockBuffer();
+	return size*nmemb;
+}
+
+size_t
+Internet::_CurlPutReadFunction(void* ptr, size_t size, size_t nmemb,
+	void* userData)
+{
+	BString* requestData = reinterpret_cast<BString*>(userData);
+	size_t curlSize = size*nmemb;
+	size_t awaitingDataSize = requestData->Length();
+	
+	size_t toCopy = curlSize < awaitingDataSize ? curlSize : awaitingDataSize;
+	char* buffer = requestData->LockBuffer(toCopy);
+	memcpy(ptr, buffer, toCopy);
+	requestData->UnlockBuffer();
+	requestData->Remove(0, toCopy);
+	
+	return toCopy; 
 }
