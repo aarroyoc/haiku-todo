@@ -19,7 +19,7 @@ namespace PluginEngine {
 //////////////////////////////////////////////////////////////////////////////
 
 
-TaskSynchronizer::TaskSynchronizer(AppEngine::TaskListManager& manager,
+TaskSynchronizer::TaskSynchronizer(//AppEngine::TaskListManager& manager,
 	bool synchronizationEnabled, int32 synchronizationTimestampSeconds)
 	:
 	fManager(nullptr),
@@ -68,7 +68,7 @@ TaskSynchronizer::GetSynchronizationTimestamp() const
 
 
 AppEngine::TaskListManager*
-TaskSynchronizer::GetSynchronizationTarget() const
+TaskSynchronizer::GetSynchronizationTarget()
 {
 	BAutolock guard(fDataMutex);
 	return fManager;
