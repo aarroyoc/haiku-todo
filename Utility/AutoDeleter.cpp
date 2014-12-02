@@ -1,4 +1,4 @@
-#include "AutoDeleter.h"
+//#include "AutoDeleter.h"
 
 #include <cassert>
 
@@ -86,6 +86,6 @@ template<typename T>
 void
 AutoDeleter<T>::Reset(T* object, Deleter deleter)
 {
-	this->Swap(AutoDeleter<T>(object, deleter));
+	//this->Swap(AutoDeleter<T>(object, deleter));
 		// Old object will be deleted (as temporary object)
 }

@@ -15,13 +15,18 @@ SET(PLUGINENGINE_SRC
 "PluginEngine/TaskSynchronizer.cpp"
 )
 SET(UTILITY_SRC
-"Utility/AutoDeleter.cpp"
+#"Utility/AutoDeleter.cpp"
 "Utility/Internet.cpp"
 "Utility/OAuth2.cpp"
 "Utility/Utility.cpp"
 )
 SET(JSON_SRC
 "ExternalLibs/SuperEasyJSON/json.cpp"
+)
+SET(GTASKS_SRC
+"Plugins/GoogleTasks/GTasksSynchronizationPlugin.cpp"
+"Plugins/GoogleTasks/GTasksSynchronizer.cpp"
+"Plugins/GoogleTasks/Utility/TimeRfc3339.cpp"
 )
 SET(HAIKU_TO_DO_SRC
 "HaikuToDo/Application.cpp"
@@ -33,10 +38,16 @@ INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/AppEngine")
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/Utility")
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/PluginEngine")
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/ExternalLibs/SuperEasyJSON")
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/Plugins/GoogleTasks")
+INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/Plugins/GoogleTasks/Utility")
 
 
-ADD_LIBRARY(AppEngine ${UTILITY_SRC} ${APPENGINE_SRC} ${PLUGINENGINE_SRC} ${JSON_SRC})
+ADD_LIBRARY(AppEngine ${UTILITY_SRC} ${APPENGINE_SRC} ${PLUGINENGINE_SRC})
+
+ADD_LIBRARY(SuperEasyJSON ${JSON_SRC})
+
+ADD_LIBRARY(GoogleTasks SHARED ${GTASKS_SRC})
 
 ADD_EXECUTABLE(HaikuToDo ${HAIKU_TO_DO_SRC})
 TARGET_LINK_LIBRARIES(HaikuToDo be root tracker curl)
-TARGET_LINK_LIBRARIES(HaikuToDo ${AppEngine})
+TARGET_LINK_LIBRARIES(HaikuToDo AppEngine SuperEasyJSON)

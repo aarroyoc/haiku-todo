@@ -55,7 +55,7 @@ class TaskSynchronizer {
 		///    in Google Tasks plugin. There were two ways - listen on given
 		///    port and get auth code (no all have forwarded ports) or user'll
 		///    get it and should paste it in application.
-		virtual bool		ProvideExtraData(void* extraData);
+		//virtual bool		ProvideExtraData(void* extraData);
 		
 	
 	private:

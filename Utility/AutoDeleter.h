@@ -39,4 +39,6 @@ class AutoDeleter {
 		Deleter						fDeleter;
 };
 
+#include "AutoDeleter.cpp"
+
 #endif // AUTODELETER_H
