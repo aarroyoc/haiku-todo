@@ -32,6 +32,7 @@ SET(HAIKU_TO_DO_SRC
 "HaikuToDo/Application.cpp"
 "HaikuToDo/MainWindow.cpp"
 "HaikuToDo/Start.cpp"
+"HaikuToDo/TaskLocal.cpp"
 )
 
 INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}/AppEngine")
@@ -50,4 +51,4 @@ ADD_LIBRARY(GoogleTasks SHARED ${GTASKS_SRC})
 
 ADD_EXECUTABLE(HaikuToDo ${HAIKU_TO_DO_SRC})
 TARGET_LINK_LIBRARIES(HaikuToDo be root tracker curl)
-TARGET_LINK_LIBRARIES(HaikuToDo AppEngine SuperEasyJSON)
+TARGET_LINK_LIBRARIES(HaikuToDo AppEngine SuperEasyJSON sqlite3)
