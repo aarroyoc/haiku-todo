@@ -82,7 +82,9 @@ MainWindow::MessageReceived(BMessage* msg)
 			int32 taskSelection=tasklist->CurrentSelection();
 			if(taskSelection>=0)
 			{
-				 
+				Task* item=dynamic_cast<Task*>(tasklist->ItemAt(taskSelection));
+				manager->MarkAsComplete(item->Text(),item->GetDetails());
+				PostMessage(new BMessage(RELOAD));
 			}
 			break;
 		}
@@ -102,6 +104,13 @@ MainWindow::MessageReceived(BMessage* msg)
 		}
 		case TASK_REMOVE:
 		{
+			int32 taskSelection=tasklist->CurrentSelection();
+			if(taskSelection>=0)
+			{
+				Task* item=dynamic_cast<Task*>(tasklist->ItemAt(taskSelection));
+				manager->RemoveTask(item->Text(),item->GetDetails());
+				PostMessage(new BMessage(RELOAD));
+			}
 			break;
 		}
 		default:
