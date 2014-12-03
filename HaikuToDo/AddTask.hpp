@@ -49,6 +49,11 @@ class AddTask : public BWindow{
 						error->Go();
 					}
 					//SEND RELOAD MESSAGE
+					int32 count=be_app->CountWindows();
+					for(int32 i=0;i<count;i++)
+					{
+						be_app->WindowAt(i)->PostMessage(new BMessage(RELOAD));
+					}
 				}
 				case CANCEL:
 				{
