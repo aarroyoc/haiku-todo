@@ -5,6 +5,8 @@
 #include <InterfaceKit.h>
 #include <Application.h>
 #include <SupportDefs.h>
+#include <Layout.h>
+#include <LayoutItem.h>
 
 #include "TaskLocal.hpp"
 
@@ -17,6 +19,7 @@ class MainWindow : public BWindow{
 		void			MessageReceived(BMessage* msg);
 		BView* 			tasks;
 		BView* 			taskdetail;
+		BListView*		categories;
 		BListView* 		tasklist;
 		BStringView*	taskTitle;
 		BStringView* 	taskDescription;

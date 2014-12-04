@@ -2,48 +2,87 @@
 #include "Task.hpp"
 #include "AddTask.hpp"
 
+#include <Layout.h>
+#include <LayoutBuilder.h>
+#include <LayoutItem.h>
+
 MainWindow::MainWindow() 
-	: BWindow(BRect(50,50,450,450),"HaikuToDo",B_TITLED_WINDOW,0)
+	: BWindow(BRect(50,50,600+50,400+50),"HaikuToDo",B_TITLED_WINDOW,0)
 {
 	
 	manager=new TaskLocal();
+	BView* main=new BView(Bounds(),"Main View",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
+	main->SetViewColor(220,220,220);
+	//BGroupLayout* grid=new BGroupLayout(B_HORIZONTAL);
+	BGridLayout* grid=new BGridLayout();
+	main->SetLayout(grid);
 	
-	tasks=new BView(BRect(0,0,100,400),"Tasks",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
-	taskdetail=new BView(BRect(100,0,400,400),"Task Details",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
+	/* Categories View */
+	BGridLayout* categoriesLayout=new BGridLayout();
+	grid->AddItem(categoriesLayout,0,0);
+	//categoriesLayout->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT,B_ALIGN_VERTICAL_CENTER));
 	
-	tasklist=new BListView(BRect(0,0,100,400),"Task List",B_SINGLE_SELECTION_LIST);
-	manager->LoadTasks(tasklist);
+	taskAdd=new BButton("Add task","Add task",new BMessage(TASK_ADD));
+	categoriesLayout->AddView(taskAdd,1,1,2,1);
+	
+	//taskRemove=new BButton("Remove task","Remove task",new BMessage(TASK_REMOVE));
+	//categoriesLayout->AddView(taskRemove,5,1,2,1);
+	
+	categories=new BListView("Categories list",B_SINGLE_SELECTION_LIST);
+	
+	BScrollView* scrollCategories=new BScrollView("Scroll categories"
+		,categories, 0, false, true);
+	categoriesLayout->AddView(scrollCategories,1,3,6,5);
+	
+	categories->AddItem(new BStringItem("ALL"));
+	
+	categoriesLayout->SetInsets(10.0f,10.0f,10.0f,10.0f);
+	
+	
+	/* List View */
+	BGridLayout* listLayout=new BGridLayout();
+	grid->AddItem(listLayout,1,0);
+	
+	taskRemove=new BButton("Remove task","Remove task",new BMessage(TASK_REMOVE));
+	listLayout->AddView(taskRemove,1,1,2,1);
+	
+	tasklist=new BListView("Tasks list",B_SINGLE_SELECTION_LIST);
 	tasklist->SetSelectionMessage(new BMessage(ITEM_SELECTED));
-	tasks->AddChild(new BScrollView("scroll_list",tasklist,
-		B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, false, true));
 	
+	BScrollView* scrollTasks=new BScrollView("Scroll tasks", tasklist,0
+		,false, true);
+	listLayout->AddView(scrollTasks,1,3,6,5);
+	listLayout->SetInsets(0.0f,10.0f,0.0f, 10.0f);
 	
-	taskdetail->SetViewColor(220,220,220);
+	/* Task View */
+	BGridLayout* taskLayout=new BGridLayout();
+	grid->AddItem(taskLayout,2,0);
+	
+	taskTitle=new BStringView("Task title","No task selected");
 	
 	BFont font;
-	taskdetail->GetFont(&font);
-	font.SetSize(32.0);
-	
-	taskTitle=new BStringView(BRect(20,0,400,100),"Task Title",
-		"No task selected",B_FOLLOW_RIGHT | B_FOLLOW_TOP);
+	taskTitle->GetFont(&font);
+	font.SetSize(30.0f);
 	taskTitle->SetFont(&font,B_FONT_SIZE | B_FONT_FLAGS);
-	taskDescription=new BStringView(BRect(20,50,400,200),"Task Description",
-		"No task selected");
-	taskCompleted=new BCheckBox(BRect(20,250,100,50),"Task Completed",
-		"Finished",new BMessage(COMPLETED_TASK));
-	taskAdd=new BButton(BRect(20,350,100,75),"Add Task","Add task",
-		new BMessage(TASK_ADD));
-	taskRemove=new BButton(BRect(150,350,250,75),"Remove task","Remove task",
-		new BMessage(TASK_REMOVE));
 	
-	taskdetail->AddChild(taskTitle);
-	taskdetail->AddChild(taskDescription);
-	taskdetail->AddChild(taskCompleted);
-	taskdetail->AddChild(taskAdd);
-	taskdetail->AddChild(taskRemove);
+	taskLayout->AddView(taskTitle,1,1,6,2);
 	
-	AddChild(tasks);
-	AddChild(taskdetail);
+	taskDescription=new BStringView("Task description","No task selected");
+	taskLayout->AddView(taskDescription,1,4,5,3);
+	
+	taskCompleted=new BCheckBox("Task completed","Finished",new BMessage(COMPLETED_TASK));
+	taskLayout->AddView(taskCompleted,1,8,5,1);
+	
+	
+	taskLayout->SetInsets(10.0f,10.0f,10.0f,10.0f);
+	
+	grid->SetMaxColumnWidth(0,300.0f);
+	grid->SetMaxColumnWidth(1,300.0f);
+	grid->SetMinColumnWidth(2,300.0f);
+	
+	AddChild(main);
+	
+	manager->LoadTasks(tasklist);
 }
 
 MainWindow::~MainWindow()
