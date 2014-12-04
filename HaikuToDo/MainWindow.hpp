@@ -22,7 +22,7 @@ class MainWindow : public BWindow{
 		BListView*		categories;
 		BListView* 		tasklist;
 		BStringView*	taskTitle;
-		BStringView* 	taskDescription;
+		BTextView*	 	taskDescription;
 		BCheckBox* 		taskCompleted;
 		BButton* 		taskEdit;
 		BButton*		taskAdd;

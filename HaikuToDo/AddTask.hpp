@@ -19,12 +19,13 @@ class AddTask : public BWindow{
 			AddChild(view);
 			//CREATE WINDOW AND BUTTONS
 			title=new BTextControl(BRect(15,15,300,75),"Title","Title:","",NULL);
-			description=new BTextControl(BRect(15,100,300,150),"Description","Description:","",NULL);
+			description=new BTextView(BRect(15,100,275,150),"Description",Bounds(),B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
+			BScrollView* scroll=new BScrollView(NULL,description);
 			save=new BButton(BRect(15,225,115,300),"Save","Save",new BMessage(SAVE_TASK));
 			cancel=new BButton(BRect(150,225,250,300),"Cancel","Cancel",new BMessage(CANCEL));
 			
 			view->AddChild(title);
-			view->AddChild(description);
+			view->AddChild(scroll);
 			view->AddChild(save);
 			view->AddChild(cancel);
 		}
@@ -64,7 +65,7 @@ class AddTask : public BWindow{
 			}
 		}
 		BTextControl*	title;
-		BTextControl*	description;
+		BTextView*		description;
 		BButton*		save;
 		BButton*		cancel;
 		TaskLocal* 		manager;

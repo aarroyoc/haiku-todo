@@ -55,7 +55,7 @@ MainWindow::MainWindow()
 	listLayout->SetInsets(0.0f,10.0f,0.0f, 10.0f);
 	
 	/* Task View */
-	BGridLayout* taskLayout=new BGridLayout();
+	BGroupLayout* taskLayout=new BGroupLayout(B_VERTICAL);
 	grid->AddItem(taskLayout,2,0);
 	
 	taskTitle=new BStringView("Task title","No task selected");
@@ -65,13 +65,15 @@ MainWindow::MainWindow()
 	font.SetSize(30.0f);
 	taskTitle->SetFont(&font,B_FONT_SIZE | B_FONT_FLAGS);
 	
-	taskLayout->AddView(taskTitle,1,1,6,2);
+	taskLayout->AddView(taskTitle);//,1,1,6,2);
 	
-	taskDescription=new BStringView("Task description","No task selected");
-	taskLayout->AddView(taskDescription,1,4,5,3);
+	taskDescription=new BTextView("Task description");
+	taskDescription->MakeEditable(false);
+	taskDescription->SetViewColor(220,220,220);
+	taskLayout->AddView(taskDescription);//,1,4//,5,3);
 	
 	taskCompleted=new BCheckBox("Task completed","Finished",new BMessage(COMPLETED_TASK));
-	taskLayout->AddView(taskCompleted,1,8,5,1);
+	taskLayout->AddView(taskCompleted);//,1,8,5,1);
 	
 	
 	taskLayout->SetInsets(10.0f,10.0f,10.0f,10.0f);
