@@ -1,10 +1,13 @@
 #include "MainWindow.hpp"
 #include "Task.hpp"
 #include "AddTask.hpp"
+#include "Category.hpp"
 
 #include <Layout.h>
 #include <LayoutBuilder.h>
 #include <LayoutItem.h>
+
+#define CATEGORY_ALL_ICON "MIME_DATABASE"
 
 MainWindow::MainWindow() 
 	: BWindow(BRect(50,50,600+50,400+50),"HaikuToDo",B_TITLED_WINDOW,0)
@@ -20,21 +23,20 @@ MainWindow::MainWindow()
 	/* Categories View */
 	BGridLayout* categoriesLayout=new BGridLayout();
 	grid->AddItem(categoriesLayout,0,0);
-	//categoriesLayout->SetExplicitAlignment(BAlignment(B_ALIGN_LEFT,B_ALIGN_VERTICAL_CENTER));
 	
 	taskAdd=new BButton("Add task","Add task",new BMessage(TASK_ADD));
 	categoriesLayout->AddView(taskAdd,1,1,2,1);
 	
-	//taskRemove=new BButton("Remove task","Remove task",new BMessage(TASK_REMOVE));
-	//categoriesLayout->AddView(taskRemove,5,1,2,1);
-	
 	categories=new BListView("Categories list",B_SINGLE_SELECTION_LIST);
+	categories->SetSelectionMessage(new BMessage(CHANGE_CATEGORY));
 	
 	BScrollView* scrollCategories=new BScrollView("Scroll categories"
 		,categories, 0, false, true);
 	categoriesLayout->AddView(scrollCategories,1,3,6,5);
 	
-	categories->AddItem(new BStringItem("ALL"));
+	#pragma message "Change Icon path"
+	categories->AddItem(new Category("ALL",CATEGORY_ALL_ICON));
+	manager->LoadCategories(categories);
 	
 	categoriesLayout->SetInsets(10.0f,10.0f,10.0f,10.0f);
 	
@@ -84,7 +86,7 @@ MainWindow::MainWindow()
 	
 	AddChild(main);
 	
-	manager->LoadTasks(tasklist);
+	manager->LoadTasks("ALL",tasklist);
 }
 
 MainWindow::~MainWindow()
@@ -124,7 +126,7 @@ MainWindow::MessageReceived(BMessage* msg)
 			if(taskSelection>=0)
 			{
 				Task* item=dynamic_cast<Task*>(tasklist->ItemAt(taskSelection));
-				manager->MarkAsComplete(item->Text(),item->GetDetails());
+				manager->MarkAsComplete(item->Text(),item->GetDetails(),item->GetCategory());
 				PostMessage(new BMessage(RELOAD));
 			}
 			break;
@@ -140,7 +142,21 @@ MainWindow::MessageReceived(BMessage* msg)
 		{
 			std::cout << "Reload started" << std::endl;
 			tasklist->MakeEmpty();
-			manager->LoadTasks(tasklist);
+			int32 selection=categories->CurrentSelection();
+			if(selection>=0)
+			{
+				Category* item=dynamic_cast<Category*>(categories->ItemAt(selection));
+				manager->LoadTasks(item->GetName(),tasklist);
+			}else{
+				manager->LoadTasks("ALL",tasklist);
+			}
+			break;
+		}
+		case RELOAD_CATEGORIES:
+		{
+			categories->MakeEmpty();
+			categories->AddItem(new Category("ALL",CATEGORY_ALL_ICON));
+			manager->LoadCategories(categories);
 			break;
 		}
 		case TASK_REMOVE:
@@ -149,10 +165,14 @@ MainWindow::MessageReceived(BMessage* msg)
 			if(taskSelection>=0)
 			{
 				Task* item=dynamic_cast<Task*>(tasklist->ItemAt(taskSelection));
-				manager->RemoveTask(item->Text(),item->GetDetails());
+				manager->RemoveTask(item->Text(),item->GetDetails(),item->GetCategory());
 				PostMessage(new BMessage(RELOAD));
 			}
 			break;
+		}
+		case CHANGE_CATEGORY:
+		{
+			PostMessage(new BMessage(RELOAD));
 		}
 		default:
 			BWindow::MessageReceived(msg);

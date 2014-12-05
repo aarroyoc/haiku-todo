@@ -15,10 +15,12 @@ class TaskLocal {
 	public:
 					TaskLocal();
 					~TaskLocal();
-			void	LoadTasks(BListView* tasks);
-			bool	AddTask(const char* title, const char* description);
-			bool	RemoveTask(const char* title, const char* description);
-			bool	MarkAsComplete(const char* title, const char* description);
+			void	LoadTasks(const char* category,BListView* tasks);
+			void	LoadCategories(BListView* categories);
+			bool	AddCategory(const char* name, const char* filename);
+			bool	AddTask(const char* title, const char* description, const char* category);
+			bool	RemoveTask(const char* title, const char* description, const char* category);
+			bool	MarkAsComplete(const char* title, const char* description, const char* category);
 	private:
 		sqlite3* 	db;
 		BAlert*		error;

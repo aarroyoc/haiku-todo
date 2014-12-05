@@ -37,5 +37,7 @@ const uint32 COMPLETED_TASK=2;
 const uint32 TASK_ADD=3;
 const uint32 TASK_REMOVE=4;
 const uint32 RELOAD=5;
+const uint32 CHANGE_CATEGORY=6;
+const uint32 RELOAD_CATEGORIES=7;
 
 #endif

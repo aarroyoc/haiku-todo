@@ -1,33 +1,60 @@
 #ifndef ADDTASK_HPP
 #define ADDTASK_HPP
 
-#include <InterfaceKit.h>
-#include "TaskLocal.hpp"
-#include "MainWindow.hpp"
-
 const int32 SAVE_TASK=10;
 const int32 CANCEL=200;
+const int32 CREATE_CATEGORY=300;
+const int32 SAVE_CATEGORY=400;
+const int32 SELECT_ICON=500;
+
+#include <InterfaceKit.h>
+#include <Layout.h>
+#include <LayoutItem.h>
+#include <LayoutBuilder.h>
+#include "TaskLocal.hpp"
+#include "MainWindow.hpp"
+#include "CreateCategory.hpp"
+#include "Category.hpp"
+
+
 
 class AddTask : public BWindow{
 	public:
-		AddTask(TaskLocal* manager) : BWindow(BRect(100,100,400,400),
+		AddTask(TaskLocal* manager) : BWindow(BRect(100,100,450,500),
 			"Add a task",B_MODAL_WINDOW,B_NOT_MINIMIZABLE| B_NOT_RESIZABLE),
 			manager(manager)
 		{
-			BView* view=new BView(Bounds(),NULL,B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
-			view->SetViewColor(220,220,220);
-			AddChild(view);
-			//CREATE WINDOW AND BUTTONS
-			title=new BTextControl(BRect(15,15,300,75),"Title","Title:","",NULL);
-			description=new BTextView(BRect(15,100,275,150),"Description",Bounds(),B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
-			BScrollView* scroll=new BScrollView(NULL,description);
-			save=new BButton(BRect(15,225,115,300),"Save","Save",new BMessage(SAVE_TASK));
-			cancel=new BButton(BRect(150,225,250,300),"Cancel","Cancel",new BMessage(CANCEL));
+			BView* main=new BView(Bounds(),"Main view",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
+			main->SetViewColor(220,220,220);
 			
-			view->AddChild(title);
-			view->AddChild(scroll);
-			view->AddChild(save);
-			view->AddChild(cancel);
+			BGridLayout* layout=new BGridLayout();
+			main->SetLayout(layout);
+			
+			title=new BTextControl("Title","Title: ","",NULL);
+			layout->AddView(title,0,0,8,1);
+			
+			description=new BTextView("Description");
+			BScrollView* scroll=new BScrollView("Description scroll",description,0,false,true);
+			layout->AddView(scroll,0,1,8,3);
+			
+			categories=new BListView("Categories",B_SINGLE_SELECTION_LIST);
+			manager->LoadCategories(categories);
+			BScrollView* scrollCategories=new BScrollView(NULL,categories,0,false,true);
+			layout->AddView(scrollCategories,0,4,8,2);
+			
+			save=new BButton(NULL,"Save task",new BMessage(SAVE_TASK));
+			layout->AddView(save,0,6,4,1);
+			
+			cancel=new BButton(NULL,"Cancel",new BMessage(CANCEL));
+			layout->AddView(cancel,4,6,2,1);
+			
+			createCategory=new BButton(NULL,"Create category",new BMessage(CREATE_CATEGORY));
+			layout->AddView(createCategory,6,6,2,1);
+			
+			layout->SetInsets(10.0f,10.0f,10.0f,10.0f);
+			
+			
+			AddChild(main);
 		}
 		~AddTask()
 		{
@@ -41,7 +68,15 @@ class AddTask : public BWindow{
 			{
 				case SAVE_TASK:
 				{
-					if(!manager->AddTask(title->Text(),description->Text()))
+					BString category("ALL");
+					int32 selection=categories->CurrentSelection();
+					if(selection>=0)
+					{
+						Category* cat=dynamic_cast<Category*>(categories->ItemAt(selection));
+						category=cat->GetName();
+					}
+					bool rc=manager->AddTask(title->Text(),description->Text(),category);
+					if(!rc)
 					{
 						BAlert* error=new BAlert("SAVING ERROR",
 							"Oops, we can't save that in database",
@@ -60,6 +95,17 @@ class AddTask : public BWindow{
 				{
 					Quit();
 				}
+				case CREATE_CATEGORY:
+				{
+					CreateCategory* create=new CreateCategory(manager);
+					create->Show();
+					PostMessage(new BMessage(RELOAD));
+				}
+				case RELOAD_CATEGORIES:
+				{
+					categories->MakeEmpty();
+					manager->LoadCategories(categories);
+				}
 				default:
 					BWindow::MessageReceived(msg);
 			}
@@ -68,6 +114,8 @@ class AddTask : public BWindow{
 		BTextView*		description;
 		BButton*		save;
 		BButton*		cancel;
+		BListView*		categories;
+		BButton*		createCategory;
 		TaskLocal* 		manager;
 };
 
