@@ -30,7 +30,7 @@ class Category : public BListItem{
 				std::cout << "Readed vector icon" << std::endl;
 			}else{
 				BNode iconPath("/boot/system/data/mime_db/text/plain");
-				BIconUtils::GetVectorIcon(&iconPath,"META:Icon",icon);
+				BIconUtils::GetVectorIcon(&iconPath,"META:ICON",icon);
 			}
 		}
 		
