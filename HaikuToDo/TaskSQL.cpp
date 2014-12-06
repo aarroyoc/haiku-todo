@@ -25,7 +25,7 @@ TaskSQL::TaskSQL()
 	if(find_directory(B_USER_SETTINGS_DIRECTORY,&path)==B_OK)
 	{
 		path.Append("HaikuToDo.db");
-		std::cout << "Path is" << path.Path() << std::endl;
+		std::cout << "Path is " << path.Path() << std::endl;
 		result=sqlite3_open(path.Path(),&db);
 		if(result!=SQLITE_OK)
 		{
