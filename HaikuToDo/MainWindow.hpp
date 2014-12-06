@@ -8,7 +8,11 @@
 #include <Layout.h>
 #include <LayoutItem.h>
 
-#include "TaskLocal.hpp"
+#ifdef BUILD_SQLITE
+#include "TaskSQL.hpp"
+#else
+#include "TaskFS.hpp"
+#endif
 
 class MainWindow : public BWindow{
 	public:
@@ -28,7 +32,7 @@ class MainWindow : public BWindow{
 		BButton*		taskAdd;
 		BButton*		taskRemove;
 		BPicture*		taskImage;
-		TaskLocal*		manager;
+		TaskManager*	manager;
 		
 };
 

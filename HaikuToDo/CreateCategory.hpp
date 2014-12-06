@@ -7,7 +7,7 @@ const int32 ICON_SELECTED=600;
 
 class CreateCategory : public BWindow{
 	public:
-		CreateCategory(TaskLocal* manager) : BWindow(BRect(100,100,300,300),"Create category"
+		CreateCategory(TaskManager* manager) : BWindow(BRect(100,100,300,300),"Create category"
 			,B_MODAL_WINDOW,0), manager(manager)
 		{
 			BView* main=new BView(Bounds(),"Main",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
@@ -84,7 +84,7 @@ class CreateCategory : public BWindow{
 		BButton*		save;
 		BButton*		cancel;
 		BString 		filename;
-		TaskLocal*		manager;
+		TaskManager*	manager;
 };
 
 #endif

@@ -12,8 +12,11 @@
 MainWindow::MainWindow() 
 	: BWindow(BRect(50,50,600+50,400+50),"HaikuToDo",B_TITLED_WINDOW,0)
 {
-	
-	manager=new TaskLocal();
+	#ifdef BUILD_SQLITE
+	manager=new TaskSQL();
+	#else
+	manager=new TaskFS();
+	#endif
 	BView* main=new BView(Bounds(),"Main View",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
 	main->SetViewColor(220,220,220);
 	//BGroupLayout* grid=new BGroupLayout(B_HORIZONTAL);

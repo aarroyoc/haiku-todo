@@ -11,7 +11,11 @@ const int32 SELECT_ICON=500;
 #include <Layout.h>
 #include <LayoutItem.h>
 #include <LayoutBuilder.h>
-#include "TaskLocal.hpp"
+#ifdef BUILD_SQLITE
+#include "TaskSQL.hpp"
+#else
+#include "TaskFS.hpp"
+#endif
 #include "MainWindow.hpp"
 #include "CreateCategory.hpp"
 #include "Category.hpp"
@@ -20,7 +24,7 @@ const int32 SELECT_ICON=500;
 
 class AddTask : public BWindow{
 	public:
-		AddTask(TaskLocal* manager) : BWindow(BRect(100,100,450,500),
+		AddTask(TaskManager* manager) : BWindow(BRect(100,100,450,500),
 			"Add a task",B_MODAL_WINDOW,B_NOT_MINIMIZABLE| B_NOT_RESIZABLE),
 			manager(manager)
 		{
@@ -116,7 +120,7 @@ class AddTask : public BWindow{
 		BButton*		cancel;
 		BListView*		categories;
 		BButton*		createCategory;
-		TaskLocal* 		manager;
+		TaskManager*	manager;
 };
 
 #endif

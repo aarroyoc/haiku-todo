@@ -1,21 +1,20 @@
-#include "TaskLocal.hpp"
+#include "TaskSQL.hpp"
 #include <InterfaceKit.h>
 #include "Task.hpp"
 #include "Category.hpp"
 
-const char* init_sentence=""
+TaskSQL::TaskSQL()
+{
+	const char* init_sentence=""
 	"CREATE TABLE IF NOT EXISTS HaikuToDo("
 	"TITLE TEXT UNIQUE,"
 	"DESCRIPTION TEXT,"
 	"CATEGORY TEXT,"
 	"FINISHED INTEGER);";
-const char* init_sentence2=""
+	const char* init_sentence2=""
 	"CREATE TABLE IF NOT EXISTS Categories("
 	"NAME TEXT,"
 	"PICTURE TEXT);";
-
-TaskLocal::TaskLocal()
-{
 	int result;
 	BPath path;
 	error=new BAlert("SQLITE ERROR",
@@ -51,13 +50,13 @@ TaskLocal::TaskLocal()
 	}
 }
 
-TaskLocal::~TaskLocal()
+TaskSQL::~TaskSQL()
 {
 	sqlite3_close(db);
 }
 
 void
-TaskLocal::LoadTasks(const char* category,BListView* tasks)
+TaskSQL::LoadTasks(const char* category,BListView* tasks)
 {
 	BString load_tasks("SELECT * FROM HaikuToDo");
 	if(strcmp("ALL",category)==0)
@@ -85,7 +84,7 @@ TaskLocal::LoadTasks(const char* category,BListView* tasks)
 }
 
 void
-TaskLocal::LoadCategories(BListView* categories)
+TaskSQL::LoadCategories(BListView* categories)
 {
 	BString load_categories("SELECT * FROM Categories;");
 	
@@ -105,7 +104,7 @@ TaskLocal::LoadCategories(BListView* categories)
 }
 
 bool
-TaskLocal::AddCategory(const char* name, const char* filename)
+TaskSQL::AddCategory(const char* name, const char* filename)
 {
 	BString insert_sentence("INSERT INTO Categories VALUES(\"");
 	insert_sentence.Append(name);
@@ -125,7 +124,7 @@ TaskLocal::AddCategory(const char* name, const char* filename)
 }
 
 bool
-TaskLocal::AddTask(const char* title, const char* description, const char* category)
+TaskSQL::AddTask(const char* title, const char* description, const char* category)
 {
 	BString insert_sentence("INSERT INTO HaikuToDo VALUES(\"");
 	insert_sentence.Append(title);
@@ -148,7 +147,7 @@ TaskLocal::AddTask(const char* title, const char* description, const char* categ
 }
 
 bool
-TaskLocal::RemoveTask(const char* title, const char* description, const char* category)
+TaskSQL::RemoveTask(const char* title, const char* description, const char* category)
 {
 	BString remove_sentence("DELETE FROM HaikuToDo WHERE TITLE=\"");
 	remove_sentence.Append(title);
@@ -166,7 +165,7 @@ TaskLocal::RemoveTask(const char* title, const char* description, const char* ca
 }
 
 bool
-TaskLocal::MarkAsComplete(const char* title, const char* description, const char* category)
+TaskSQL::MarkAsComplete(const char* title, const char* description, const char* category)
 {
 	BString update_sentence("UPDATE HaikuToDo SET FINISHED=1 WHERE TITLE=\"");
 	update_sentence.Append(title);
