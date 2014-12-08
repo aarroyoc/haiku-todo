@@ -9,6 +9,7 @@ SET(HAIKU_TO_DO_SRC
 "HaikuToDo/Application.cpp"
 "HaikuToDo/MainWindow.cpp"
 "HaikuToDo/Start.cpp"
+"HaikuToDo/TaskGoogle.cpp"
 )
 IF(BUILD_SQLITE)
 	LIST(APPEND HAIKU_TO_DO_SRC "HaikuToDo/TaskSQL.cpp")
@@ -17,7 +18,7 @@ ELSE()
 ENDIF()
 
 ADD_EXECUTABLE(HaikuToDo ${HAIKU_TO_DO_SRC})
-TARGET_LINK_LIBRARIES(HaikuToDo be root tracker)
+TARGET_LINK_LIBRARIES(HaikuToDo be root tracker netapi network)
 IF(BUILD_SQLITE)
 	ADD_DEFINITIONS(-DBUILD_SQLITE)
 	TARGET_LINK_LIBRARIES(HaikuToDo sqlite3)

@@ -2,6 +2,8 @@
 #include "Task.hpp"
 #include "AddTask.hpp"
 #include "Category.hpp"
+#include "TaskGoogle.hpp"
+#include "TaskSync.hpp"
 
 #include <Layout.h>
 #include <LayoutBuilder.h>
@@ -17,6 +19,10 @@ MainWindow::MainWindow()
 	#else
 	manager=new TaskFS();
 	#endif
+	//DOING TESTS WITH GOOGLE TASKS
+	TaskSync* login=new TaskGoogle();
+	login->Login();
+	//END DOING TESTS
 	BView* main=new BView(Bounds(),"Main View",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
 	main->SetViewColor(220,220,220);
 	//BGroupLayout* grid=new BGroupLayout(B_HORIZONTAL);
