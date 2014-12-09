@@ -20,8 +20,9 @@ MainWindow::MainWindow()
 	manager=new TaskFS();
 	#endif
 	//DOING TESTS WITH GOOGLE TASKS
-	TaskSync* login=new TaskGoogle();
-	login->Login();
+	sync=new TaskGoogle();
+	sync->Login();
+	//SEND MESSAGE WHEN LOADED
 	//END DOING TESTS
 	BView* main=new BView(Bounds(),"Main View",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
 	main->SetViewColor(220,220,220);
@@ -147,6 +148,11 @@ MainWindow::MessageReceived(BMessage* msg)
 			
 			break;
 		}
+		/*case SYNC_CATEGORIES:
+		{
+			BList* cats=sync->GetCategories();
+			categories->AddList(cats);
+		}*/
 		case RELOAD:
 		{
 			std::cout << "Reload started" << std::endl;

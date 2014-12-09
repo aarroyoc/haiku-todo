@@ -18,7 +18,7 @@ ELSE()
 ENDIF()
 
 ADD_EXECUTABLE(HaikuToDo ${HAIKU_TO_DO_SRC})
-TARGET_LINK_LIBRARIES(HaikuToDo be root tracker netapi network)
+TARGET_LINK_LIBRARIES(HaikuToDo be root tracker netapi network shared)
 IF(BUILD_SQLITE)
 	ADD_DEFINITIONS(-DBUILD_SQLITE)
 	TARGET_LINK_LIBRARIES(HaikuToDo sqlite3)

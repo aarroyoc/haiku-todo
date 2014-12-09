@@ -5,13 +5,22 @@
 #include <InterfaceKit.h>
 #include "MainWindow.hpp"
 #include <iostream>
+#include <vector>
+#include "Category.hpp"
+#include "Task.hpp"
 
 class TaskGoogle : public TaskSync{
 	public:
-				TaskGoogle();
-				~TaskGoogle();
-		bool	Login();
-		void	NextStep(BString code);
+									TaskGoogle();
+									~TaskGoogle();
+		bool						Login();
+		void						NextStep(BString code);
+		BList*						GetCategories();
+		BList*						GetTasks(Category* category);
+	private:
+		BString token;
+		BList* categories;
+		BList* tasks;
 };
 
 const int32 LOGIN_CODE=700;

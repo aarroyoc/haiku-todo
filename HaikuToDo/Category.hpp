@@ -8,7 +8,7 @@
 
 class Category : public BListItem{
 	public:
-		Category(const char* name, const char* filepath) : name(name)
+		Category(const char* name, const char* filepath, const char* idcat=NULL) : name(name)
 		{
 			icon=new BBitmap(BRect(0,0,15,15),B_RGBA32);
 			if(strcmp(filepath,"MIME_DATABASE")!=0)
@@ -32,6 +32,11 @@ class Category : public BListItem{
 				BNode iconPath("/boot/system/data/mime_db/text/plain");
 				BIconUtils::GetVectorIcon(&iconPath,"META:ICON",icon);
 			}
+			
+			if(idcat!=NULL)
+			{
+				id=BString(idcat);
+			}
 		}
 		
 		~Category()
@@ -43,6 +48,12 @@ class Category : public BListItem{
 		GetName()
 		{
 			return name.String();
+		}
+		
+		const char*
+		GetID()
+		{
+			return id.String();
 		}
 	private:
 		void DrawItem(BView* owner, BRect frame, bool complete)
@@ -79,6 +90,7 @@ class Category : public BListItem{
 		}
 		BString name;
 		BBitmap* icon;
+		BString id;
 	
 };
 

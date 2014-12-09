@@ -8,6 +8,8 @@
 #include <Layout.h>
 #include <LayoutItem.h>
 
+#include "TaskGoogle.hpp"
+
 #ifdef BUILD_SQLITE
 #include "TaskSQL.hpp"
 #else
@@ -33,6 +35,7 @@ class MainWindow : public BWindow{
 		BButton*		taskRemove;
 		BPicture*		taskImage;
 		TaskManager*	manager;
+		TaskSync*		sync;
 		
 };
 
