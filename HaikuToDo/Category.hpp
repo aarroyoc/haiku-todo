@@ -8,7 +8,8 @@
 
 class Category : public BListItem{
 	public:
-		Category(const char* name, const char* filepath, const char* idcat=NULL) : name(name)
+		Category(const char* name, const char* filepath, const char* idcat=BString("NULL")) :
+		 name(name), id(idcat)
 		{
 			icon=new BBitmap(BRect(0,0,15,15),B_RGBA32);
 			if(strcmp(filepath,"MIME_DATABASE")!=0)
@@ -31,11 +32,6 @@ class Category : public BListItem{
 			}else{
 				BNode iconPath("/boot/system/data/mime_db/text/plain");
 				BIconUtils::GetVectorIcon(&iconPath,"META:ICON",icon);
-			}
-			
-			if(idcat!=NULL)
-			{
-				id=BString(idcat);
 			}
 		}
 		

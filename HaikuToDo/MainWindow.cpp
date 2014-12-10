@@ -21,7 +21,7 @@ MainWindow::MainWindow()
 	#endif
 	//DOING TESTS WITH GOOGLE TASKS
 	sync=new TaskGoogle();
-	sync->Login();
+	//sync->Login();
 	//SEND MESSAGE WHEN LOADED
 	//END DOING TESTS
 	BView* main=new BView(Bounds(),"Main View",B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
@@ -44,7 +44,9 @@ MainWindow::MainWindow()
 		,categories, 0, false, true);
 	categoriesLayout->AddView(scrollCategories,1,3,6,5);
 	
-	#pragma message "Change Icon path"
+	googleTasks=new BButton("Google Tasks","Google Tasks",new BMessage(LOGIN_GTASKS));
+	categoriesLayout->AddView(googleTasks,1,8,2,1);
+	
 	categories->AddItem(new Category("ALL",CATEGORY_ALL_ICON));
 	manager->LoadCategories(categories);
 	
@@ -148,11 +150,15 @@ MainWindow::MessageReceived(BMessage* msg)
 			
 			break;
 		}
-		/*case SYNC_CATEGORIES:
+		case SYNC_CATEGORIES:
 		{
 			BList* cats=sync->GetCategories();
 			categories->AddList(cats);
-		}*/
+		}
+		case LOGIN_GTASKS:
+		{
+			sync->Login();
+		}
 		case RELOAD:
 		{
 			std::cout << "Reload started" << std::endl;
@@ -161,7 +167,13 @@ MainWindow::MessageReceived(BMessage* msg)
 			if(selection>=0)
 			{
 				Category* item=dynamic_cast<Category*>(categories->ItemAt(selection));
-				manager->LoadTasks(item->GetName(),tasklist);
+				if(strcmp(item->GetID(),"NULL")==0)
+				{
+					manager->LoadTasks(item->GetName(),tasklist);
+				}else{
+					tasklist->AddList(sync->GetTasks(item));
+				}
+				
 			}else{
 				manager->LoadTasks("ALL",tasklist);
 			}

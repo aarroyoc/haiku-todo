@@ -34,6 +34,7 @@ class MainWindow : public BWindow{
 		BButton*		taskAdd;
 		BButton*		taskRemove;
 		BPicture*		taskImage;
+		BButton*		googleTasks;
 		TaskManager*	manager;
 		TaskSync*		sync;
 		
@@ -46,5 +47,6 @@ const uint32 TASK_REMOVE=4;
 const uint32 RELOAD=5;
 const uint32 CHANGE_CATEGORY=6;
 const uint32 RELOAD_CATEGORIES=7;
+const uint32 LOGIN_GTASKS=950;
 
 #endif

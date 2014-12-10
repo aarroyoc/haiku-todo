@@ -91,16 +91,25 @@ TaskGoogle::NextStep(BString code)
 			std::cerr << "ERROR: No '0' list found " << std::endl;
 		}
 		userList.PrintToStream();
-		BString title;
-		BString id;
-		userLists.FindString("title",&title);
-		userLists.FindString("id",&id);
-		Category* cat=new Category(title.String(),"MIME_DATABASE",id.String());
+		const char* title;
+		const char* id;
+		if(userList.FindString("title",&title)!=B_OK)
+		{
+			std::cerr << "ERROR: No 'title' found " << std::endl;
+		}
+		userList.FindString("id",&id);
+		Category* cat=new Category(title,"MIME_DATABASE",id);
 		categories->AddItem(cat);
-		//this->GetTasks(cat);
+		this->GetTasks(cat);
 	}
 	
 	//DISPATCH SYNC_CATEGORIES
+	
+	int32 count=be_app->CountWindows();
+	for(int32 i=0;i<count;i++)
+	{
+		be_app->WindowAt(i)->PostMessage(new BMessage(SYNC_CATEGORIES));
+	}
 
 }
 
@@ -114,17 +123,48 @@ BList*
 TaskGoogle::GetTasks(Category* cat)
 {
 	//DO HTTP CONNECTION TO GOOGLE
+	BList* tks=new BList(20);
+	
 	BString id=cat->GetID();
+	std::cout << "ID: " << id.String() << std::endl;
 	BString url("https://www.googleapis.com/tasks/v1/lists/");
 	url.Append(id);
 	url.Append("/tasks?access_token=");
 	url.Append(token);
 	
-	/*BString response(HaikuHTTP::GET(url));
+	BString response(HaikuHTTP::GET(url));
 	std::cout << response.String() << std::endl;
 	BMessage taskJson;
 	BPrivate::BJson::Parse(taskJson,response);
-	taskJson.PrintToStream();*/
+	taskJson.PrintToStream();
 	
-	return tasks;
+	BMessage items;
+	taskJson.FindMessage("items",&items);
+	int32 lists=items.CountNames(B_ANY_TYPE);
+	std::cout << "Lists found: " << lists << std::endl;
+	
+	for(int32 currentTask=0;currentTask<lists;currentTask++)
+	{
+		std::ostringstream ss;
+		ss << currentTask;
+		BMessage task;
+		if(items.FindMessage(ss.str().c_str(),&task)!=B_OK)
+		{
+			std::cerr << "ERROR: No '0' list found " << std::endl;
+		}
+		task.PrintToStream();
+		const char* title;
+		const char* taskId;
+		const char* notes;
+		const char* status;
+		task.FindString("title",&title);
+		task.FindString("id",&taskId);
+		task.FindString("notes",&notes);
+		task.FindString("status",&status);
+		Task* tk=new Task(title,notes,id.String(),false);
+		tks->AddItem(tk);
+	}
+	
+	
+	return tks;
 }

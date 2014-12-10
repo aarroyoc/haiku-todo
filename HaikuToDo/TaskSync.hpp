@@ -6,6 +6,8 @@
 #include "Category.hpp"
 #include "Task.hpp"
 
+const int32 SYNC_CATEGORIES=800;
+
 class TaskSync {
 	public:
 							TaskSync(){};
