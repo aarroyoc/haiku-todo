@@ -154,10 +154,13 @@ MainWindow::MessageReceived(BMessage* msg)
 		{
 			BList* cats=sync->GetCategories();
 			categories->AddList(cats);
+			break;
 		}
 		case LOGIN_GTASKS:
 		{
+			std::cout << "Login one time" << std::endl;
 			sync->Login();
+			break;
 		}
 		case RELOAD:
 		{

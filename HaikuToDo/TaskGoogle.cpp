@@ -11,6 +11,7 @@
 #include "Internet.hpp"
 #include <string>
 #include <sstream>
+#include <app/Roster.h>
 
 TaskGoogle::TaskGoogle()
 {
@@ -26,13 +27,14 @@ TaskGoogle::~TaskGoogle()
 bool
 TaskGoogle::Login()
 {
-	BString endpoint("WebPositive 'https://accounts.google.com/o/oauth2/auth");
+	BString endpoint("https://accounts.google.com/o/oauth2/auth");
 	endpoint.Append("?response_type=code");
 	endpoint.Append("&client_id=318709342848-0h9712v3kbpcv1r7oc8krdrfu22ohlld.apps.googleusercontent.com");
 	endpoint.Append("&redirect_uri=urn:ietf:wg:oauth:2.0:oob");
-	endpoint.Append("&scope=https://www.googleapis.com/auth/tasks' &");
+	endpoint.Append("&scope=https://www.googleapis.com/auth/tasks");
 	std::cout << endpoint.String() << std::endl;
-	system(endpoint.String());
+	const char *args[] = { endpoint.String(), 0 };
+	be_roster->Launch("application/x-vnd.Be.URL.http",1,const_cast<char **>(args));
 	
 	LoginDialog* login=new LoginDialog(this);
 	login->Show();

@@ -27,7 +27,7 @@ const int32 LOGIN_CODE=700;
 
 class LoginDialog : public BWindow{
 	public:
-		LoginDialog(TaskSync* auth) : BWindow(BRect(100,100,300,300),"Login code",B_TITLED_WINDOW,0)
+		LoginDialog(TaskSync* auth) : BWindow(BRect(100,100,300,300),"Login code",B_MODAL_WINDOW,0)
 			, auth(auth)
 		{
 			BView* main=new BView(Bounds(),NULL,B_FOLLOW_ALL_SIDES,B_WILL_DRAW);
