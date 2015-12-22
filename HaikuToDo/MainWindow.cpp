@@ -76,7 +76,7 @@ MainWindow::MainWindow()
 
 	BFont font;
 	taskTitle->GetFont(&font);
-	font.SetSize(20.0f);
+	font.SetSize(font.Size()*1.7);
 	taskTitle->SetFont(&font,B_FONT_SIZE | B_FONT_FLAGS);
 
 	taskLayout->AddView(taskTitle);//,1,1,6,2);
