@@ -11,7 +11,7 @@
 
 #define CATEGORY_ALL_ICON "MIME_DATABASE"
 
-MainWindow::MainWindow() 
+MainWindow::MainWindow()
 	: BWindow(BRect(50,50,600+50,400+50),"HaikuToDo",B_TITLED_WINDOW,0)
 {
 	#ifdef BUILD_SQLITE
@@ -29,81 +29,81 @@ MainWindow::MainWindow()
 	//BGroupLayout* grid=new BGroupLayout(B_HORIZONTAL);
 	BGridLayout* grid=new BGridLayout();
 	main->SetLayout(grid);
-	
+
 	/* Categories View */
 	BGridLayout* categoriesLayout=new BGridLayout();
 	grid->AddItem(categoriesLayout,0,0);
-	
+
 	taskAdd=new BButton("Add task","Add task",new BMessage(TASK_ADD));
 	categoriesLayout->AddView(taskAdd,1,1,2,1);
-	
+
 	categories=new BListView("Categories list",B_SINGLE_SELECTION_LIST);
 	categories->SetSelectionMessage(new BMessage(CHANGE_CATEGORY));
-	
+
 	BScrollView* scrollCategories=new BScrollView("Scroll categories"
 		,categories, 0, false, true);
 	categoriesLayout->AddView(scrollCategories,1,3,6,5);
-	
+
 	googleTasks=new BButton("Google Tasks","Google Tasks",new BMessage(LOGIN_GTASKS));
 	categoriesLayout->AddView(googleTasks,1,8,2,1);
-	
+
 	categories->AddItem(new Category("ALL",CATEGORY_ALL_ICON));
 	manager->LoadCategories(categories);
-	
+
 	categoriesLayout->SetInsets(10.0f,10.0f,10.0f,10.0f);
-	
-	
+
+
 	/* List View */
 	BGridLayout* listLayout=new BGridLayout();
 	grid->AddItem(listLayout,1,0);
-	
+
 	taskRemove=new BButton("Remove task","Remove task",new BMessage(TASK_REMOVE));
 	listLayout->AddView(taskRemove,1,1,2,1);
-	
+
 	tasklist=new BListView("Tasks list",B_SINGLE_SELECTION_LIST);
 	tasklist->SetSelectionMessage(new BMessage(ITEM_SELECTED));
-	
+
 	BScrollView* scrollTasks=new BScrollView("Scroll tasks", tasklist,0
 		,false, true);
 	listLayout->AddView(scrollTasks,1,3,6,5);
 	listLayout->SetInsets(0.0f,10.0f,0.0f, 10.0f);
-	
+
 	/* Task View */
 	BGroupLayout* taskLayout=new BGroupLayout(B_VERTICAL);
 	grid->AddItem(taskLayout,2,0);
-	
+
 	taskTitle=new BStringView("Task title","No task selected");
-	
+
 	BFont font;
 	taskTitle->GetFont(&font);
-	font.SetSize(30.0f);
+	font.SetSize(20.0f);
 	taskTitle->SetFont(&font,B_FONT_SIZE | B_FONT_FLAGS);
-	
+
 	taskLayout->AddView(taskTitle);//,1,1,6,2);
-	
+
 	taskDescription=new BTextView("Task description");
 	taskDescription->MakeEditable(false);
 	taskDescription->SetViewColor(220,220,220);
 	taskLayout->AddView(taskDescription);//,1,4//,5,3);
-	
+
 	taskCompleted=new BCheckBox("Task completed","Finished",new BMessage(COMPLETED_TASK));
 	taskLayout->AddView(taskCompleted);//,1,8,5,1);
-	
-	
+
+
 	taskLayout->SetInsets(10.0f,10.0f,10.0f,10.0f);
-	
+
 	grid->SetMaxColumnWidth(0,300.0f);
 	grid->SetMaxColumnWidth(1,300.0f);
 	grid->SetMinColumnWidth(2,300.0f);
-	
+
 	AddChild(main);
-	
+
 	manager->LoadTasks("ALL",tasklist);
 }
 
 MainWindow::~MainWindow()
 {
-	
+
 }
 
 bool
@@ -147,7 +147,7 @@ MainWindow::MessageReceived(BMessage* msg)
 		{
 			AddTask* add=new AddTask(manager);
 			add->Show();
-			
+
 			break;
 		}
 		case SYNC_CATEGORIES:
@@ -176,7 +176,7 @@ MainWindow::MessageReceived(BMessage* msg)
 				}else{
 					tasklist->AddList(sync->GetTasks(item));
 				}
-				
+
 			}else{
 				manager->LoadTasks("ALL",tasklist);
 			}
