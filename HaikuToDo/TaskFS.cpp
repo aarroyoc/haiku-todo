@@ -3,6 +3,7 @@
 #include "Task.hpp"
 #include "Category.hpp"
 #include <cstdlib>
+#include <TypeConstants.h>
 #include <posix/sys/stat.h>
 #include <kernel/fs_index.h>
 
@@ -31,19 +32,19 @@ TaskFS::TaskFS()
 	categoriesPath.Append("Categories");
 	tasks=BString(taskPath.Path());
 	categories=BString(categoriesPath.Path());
-	
+
 	struct stat st;
 	settings.GetStat(&st);
-	
+
 	volume=st.st_dev;
-	
+
 	fs_create_index(st.st_dev,"HAIKU_TO_DO:Category",B_STRING_TYPE,0);
-	
+
 }
 
 TaskFS::~TaskFS()
 {
-	
+
 }
 
 void
@@ -79,23 +80,14 @@ TaskFS::LoadTasks(const char* category, BListView* tasksList)
 				file.GetSize(&file_size);
 				char buffer[file_size+1024];
 				file.Read(buffer,file_size);
-				BString finished;
-				file.ReadAttrString("HAIKU_TO_DO:Finished",&finished);
-				bool fin;
-				if(finished.Compare("FINISHED")==0)
-				{
-					fin=true;
-				}
-				else
-				{
-					fin=false;
-				}
-				Task* tk=new Task((const char*)name,(const char*)buffer,"ALL",fin);
+				bool finished;
+				file.ReadAttr("HAIKU_TO_DO:Finished",B_BOOL_TYPE,0,&finished,sizeof(bool));
+				Task* tk=new Task((const char*)name,(const char*)buffer,"ALL",finished);
 				tasksList->AddItem(tk);
 			}
 		}
 	}
-	
+
 }
 
 void
@@ -138,7 +130,8 @@ TaskFS::AddTask(const char* title, const char* description, const char* category
 	dir.CreateFile(title,&file);
 	file.Write(desc,desc.Length());
 	file.WriteAttrString("HAIKU_TO_DO:Category",new BString(category));
-	file.WriteAttrString("HAIKU_TO_DO:Finished",new BString("UNFINISHED"));
+	bool finished=false;
+	file.WriteAttr("HAIKU_TO_DO:Finished",B_BOOL_TYPE,0,&finished,sizeof(bool));
 }
 
 bool
@@ -147,7 +140,7 @@ TaskFS::RemoveTask(const char* title, const char* description, const char* categ
 	BString predicate("(HAIKU_TO_DO:Category=**)&&(name=");
 	predicate.Append(title);
 	predicate.Append(")");
-	
+
 	BQuery query;
 	BVolume volume;
 	BVolumeRoster volumeRoster;
@@ -178,7 +171,7 @@ TaskFS::MarkAsComplete(const char* title, const char* description, const char* c
 	BString predicate("(HAIKU_TO_DO:Category=**)&&(name=");
 	predicate.Append(title);
 	predicate.Append(")");
-	
+
 	BQuery query;
 	BVolume volume;
 	BVolumeRoster volumeRoster;
@@ -198,9 +191,10 @@ TaskFS::MarkAsComplete(const char* title, const char* description, const char* c
 			while(query.GetNextEntry(&entry)==B_OK)
 			{
 				BFile file(&entry,B_READ_ONLY);
-				file.WriteAttrString("HAIKU_TO_DO:Finished",new BString("FINISHED"));
+				bool finished=true;
+				file.WriteAttr("HAIKU_TO_DO:Finished",B_BOOL_TYPE,0,&finished,sizeof(bool));
 			}
 		}
 	}
 }
-		
+
