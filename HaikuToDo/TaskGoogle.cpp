@@ -52,7 +52,7 @@ TaskGoogle::Login()
 		BString endpoint("https://www.googleapis.com/oauth2/v4/token");
 		BString response(HaikuHTTP::GET(endpoint,form));
 		BMessage refreshJson;
-		BPrivate::BJson::Parse(refreshJson,response);
+		BPrivate::BJson::Parse(response, refreshJson);
 		token = BString(refreshJson.GetString("access_token","NOT_FOUND"));
 		if(token.Compare("NOT_FOUND") == 0)
 		{
@@ -96,7 +96,7 @@ TaskGoogle::NextStep(BString code)
 	BString tokenResponse(HaikuHTTP::GET(oauth2,form));
 
 	BMessage tokenJson;
-	BPrivate::BJson::Parse(tokenJson,tokenResponse);
+	BPrivate::BJson::Parse(tokenResponse, tokenJson);
 	tokenJson.PrintToStream();
 
 	token=BString(tokenJson.GetString("access_token","NOT_FOUND"));
@@ -120,7 +120,7 @@ TaskGoogle::Sync()
 
 	BMessage listsJson;
 	std::cout << listsResponse << std::endl;
-	BPrivate::BJson::Parse(listsJson,listsResponse);
+	BPrivate::BJson::Parse(listsResponse, listsJson);
 	listsJson.PrintToStream();
 
 	BMessage userLists;
@@ -187,7 +187,7 @@ TaskGoogle::GetTasks(Category* cat)
 	BString response(HaikuHTTP::GET(url));
 	std::cout << response.String() << std::endl;
 	BMessage taskJson;
-	BPrivate::BJson::Parse(taskJson,response);
+	BPrivate::BJson::Parse(response, taskJson);
 	taskJson.PrintToStream();
 
 	BMessage items;
